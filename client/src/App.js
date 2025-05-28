@@ -12,7 +12,10 @@ function App() {
 
     fetch('/api/seller')
       .then(res => res.json())
-      .then(({sellers}) => setSellers(sellers))
+      .then(({sellers}) => {
+        console.log(sellers)
+        setSellers(sellers)
+      })
   }, []);
 
   return (
