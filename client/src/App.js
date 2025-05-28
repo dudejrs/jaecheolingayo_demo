@@ -17,6 +17,7 @@ function App() {
 
   return (
     <div>
+      <h1>{msg}</h1>
       {
         sellers && sellers.map(seller=><div>{seller.id}</div>)
       }
