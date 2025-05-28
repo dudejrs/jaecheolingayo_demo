@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 function App() {
   const [msg, setMsg] = useState('');
-  const [sellers, _] = useState([]);
+  const [sellers, setSellers] = useState([]);
 
   useEffect(() => {
     fetch('/api/hello')
