@@ -20,6 +20,6 @@
     "build": "npm run build --prefix client"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "mysql2": "^3.14.1"
   }
 }
