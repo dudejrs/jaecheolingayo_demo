@@ -1,4 +1,4 @@
 
 export default function handler(req, res) {
-  res.status(200).json({ message: 'Hello from Express-like API' });
+  res.status(200).json({ message: '제철인가요' });
 }

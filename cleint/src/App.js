@@ -1,0 +1,31 @@
+import { useEffect, useState } from 'react';
+
+function App() {
+  const [msg, setMsg] = useState('');
+  const [sellers, setSellers] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/hello')
+      .then(res => res.json())
+      .then(data => setMsg(data.message));
+
+
+    fetch('/api/seller')
+      .then(res => res.json())
+      .then(({sellers}) => {
+        console.log(sellers)
+        setSellers(sellers)
+      })
+  }, []);
+
+  return (
+    <div>
+      <h1>{msg}</h1>
+      {
+        sellers && sellers.map(seller=><div>{seller.id}</div>)
+      }
+    </div>
+    );
+}
+
+export default App;
