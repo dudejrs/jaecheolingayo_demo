@@ -2,33 +2,38 @@
 
 import { useEffect, useState } from 'react';
 
+
 type Seller = {
   id: string;
 };
 
 export default function Page() {
-  const [msg, setMsg] = useState('');
-  const [sellers, setSellers] = useState<Seller[]>([]);
+  const [sellerCount, setSellerCount] = useState<Number|null>(null);
+  const [itemCount, setItemCount] = useState<Number|null>(null);
 
   useEffect(() => {
-    fetch('/api/hello')
+    fetch('/api/seller/count')
       .then(res => res.json())
-      .then(data => setMsg(data.message));
+      .then(({count}) => setSellerCount(count))
 
-    fetch('/api/seller')
+    fetch('/api/item/count')
       .then(res => res.json())
-      .then(({ sellers }) => {
-        console.log(sellers);
-        setSellers(sellers);
-      });
+      .then(({count}) => setItemCount(count))
+
   }, []);
 
   return (
     <div>
-      <h1>{msg}</h1>
-      {sellers.map(seller => (
-        <div key={seller.id}>{seller.id}</div>
-      ))}
+      <div>
+        {
+          sellerCount && `총 판매자 수 : ${sellerCount}`
+        }
+      </div>
+      <div>
+        {
+          itemCount && `총 아이템 수 : ${itemCount}`
+        }
+      </div>
     </div>
   );
 }
