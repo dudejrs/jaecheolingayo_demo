@@ -8,8 +8,8 @@ type Seller = {
 };
 
 export default function Page() {
-  const [sellerCount, setSellerCount] = useState<Number|null>(null);
-  const [itemCount, setItemCount] = useState<Number|null>(null);
+  const [sellerCount, setSellerCount] = useState<number|null>(null);
+  const [itemCount, setItemCount] = useState<number|null>(null);
 
   useEffect(() => {
     fetch('/api/seller/count')

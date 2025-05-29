@@ -1,13 +1,14 @@
+import { RowDataPacket } from 'mysql2';
 import mysql from 'mysql2/promise';
 
-export function getCount(table: String) {
+export function getCount(table: string) {
   return async function () {
     const connection = await getConnection()
 
-    const [rows, ...rest] = await connection.execute(`SELECT count(*) as count FROM ${table};`);
+    const [rows] = await connection.execute<RowDataPacket[]>(`SELECT count(*) as count FROM ${table};`);
     await connection.end();
 
-    return rows[0].count
+    return (rows as RowDataPacket[])[0].count
   }
 }
 
