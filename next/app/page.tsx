@@ -2,9 +2,13 @@
 
 import { useEffect, useState } from 'react';
 
+type Seller = {
+  id: string;
+};
+
 export default function Page() {
   const [msg, setMsg] = useState('');
-  const [sellers, setSellers] = useState([]);
+  const [sellers, setSellers] = useState<Seller[]>([]);
 
   useEffect(() => {
     fetch('/api/hello')
