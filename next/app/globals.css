@@ -1,8 +1,41 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+
+  --pccs-red-light: #f4cccc;
+  --pccs-red-orange-light: #fce5cd;
+  --pccs-orange-light: #fff2cc;
+  --pccs-yellow-orange-light: #fff9cc;
+  --pccs-yellow-light: #ffffcc;
+  --pccs-yellow-green-light: #eaffd0;
+  --pccs-green-light: #d9ead3;
+  --pccs-blue-green-light: #d0e0e3;
+  --pccs-cyan-light: #cfe2f3;
+  --pccs-blue-light: #c9daf8;
+  --pccs-blue-purple-light: #d9d2e9;
+  --pccs-purple-light: #ead1dc;
+  --pccs-red-purple-light: #f4cccc;
+  --gray-10: #1a1a1a;
+  --gray-20: #333333;
+  --gray-30: #4d4d4d;
+  --gray-40: #666666;
+  --gray-50: #808080;
+  --gray-60: #999999;
+  --gray-70: #b3b3b3;
+  --gray-80: #cccccc;
+  --gray-90: #e6e6e6;
+
+  --background: var(--gray-90); 
   --foreground: #171717;
+  --color-background-alt: var(--gray-80);
+  --color-text-primary : var(--gray-10);
+  --color-text-secondary: var(--gray-20);
+  --color-border: var(--gray-60);
+  --color-border-focus: var(--gray-10);
+  --color-primary: var(--gray-80);
+  --color-primary-hover: var(--gray-10);
+  --color-error: var(--gray-10);
+  --color-success : var(--gray-10);
 }
 
 @theme inline {
@@ -14,8 +47,17 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: var(--gray-10);
     --foreground: #ededed;
+    --color-background-alt: var(--gray-20);
+    --color-text-primary : var(--gray-10);
+    --color-text-secondary: var(--gray-20);
+    --color-border: var(--gray-70);
+    --color-border-focus: var(--gray-10);
+    --color-primary: var(--gray-80);
+    --color-primary-hover: var(--gray-10);
+    --color-error: var(--gray-10);
+    --color-success : var(--gray-10);
   }
 }
 

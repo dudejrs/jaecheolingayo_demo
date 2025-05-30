@@ -1,4 +1,4 @@
-import {getItemCount} from "../../../lib/db/item"
+import {getItemCount} from "@/lib/db/item"
 
 
 export default async function handler(req, res) {

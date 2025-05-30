@@ -1,4 +1,4 @@
-import {getSellerCount} from "../../../lib/db/seller"
+import {getSellerCount} from "@/lib/db/seller"
 
 
 export default async function handler(req, res) {
