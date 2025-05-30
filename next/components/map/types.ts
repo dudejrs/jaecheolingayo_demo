@@ -27,9 +27,23 @@ export class Point{
 
 		return new Point(newX, newY)
 	}
+
+	get xAxisReflected() {
+		const newX = - this.x
+		const newY = this.y
+
+		return new Point(newX, newY);
+	}
+
+	get distanceFromOrigin() {
+		return Math.sqrt(this.x * this.x + this.y * this.y)
+	}
 }
 
 export class Ratio {
+	static MAXIMUM = new Ratio(720000, 720000)
+	static MINIMUM = new Ratio(50000, 50000)
+
 	readonly width:  number;
 	readonly height:  number;
 
@@ -60,7 +74,6 @@ export class Ratio {
 		const newX = midPoint.x - (this.width / 2)
 		const newY = midPoint.y - (this.height / 2)
 
-		console.log (newX, newY)
 
 		return new Point(newX, newY)
 	}
@@ -70,6 +83,29 @@ export class Ratio {
 		const newY = this.height - p.y
 
 		return new Point(newX, newY)
+	}
+
+	scale(r: number) : Ratio {
+		const new_width = this.width * r
+		const new_height = this.height * r
+
+		const clamped_width = Math.min(
+		Math.max(new_width, Ratio.MINIMUM.width),
+			Ratio.MAXIMUM.width
+		);
+		const clamped_height = Math.min(
+			Math.max(new_height, Ratio.MINIMUM.height),
+			Ratio.MAXIMUM.height
+		);
+
+		const original_aspect = this.width / this.height;
+		const clamped_aspect = clamped_width / clamped_height;
+
+		if (original_aspect > clamped_aspect) {
+			return new Ratio(clamped_height * original_aspect, clamped_height);
+		} else {
+			return new Ratio(clamped_width, clamped_width / original_aspect);
+		}
 	}
 
 	get min() {
