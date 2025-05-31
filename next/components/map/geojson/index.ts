@@ -1,3 +1,4 @@
+import {useState, useEffect} from 'react'
 import {MultiPolygon, CoordPorjection, Geometry, Path, Point, Polygon} from './types'
 
 export function multiPolygonToPath(multiPolygonCoords: MultiPolygon[], proj: CoordPorjection = ([x, y]) => [x, y]): Path {
@@ -24,4 +25,18 @@ export const GeoJsonToPaths= ({geometry}: {geometry: Geometry}): Path[] => {
 		result.push(d);
 	}
 	return result
+}
+
+export function useGeoJson(url: string): Path[] {
+  const [paths, setPaths] = useState<Path[]>([]);
+
+  useEffect(() => {
+    fetch(url)
+      .then(res => res.json())
+      .then(json => json.map(GeoJsonToPaths))
+      .then(setPaths)
+      .catch(console.error);
+  }, [url]);
+
+  return paths;
 }

@@ -112,3 +112,5 @@ export class Ratio {
 		return this.width < this.height ? this.width : this.height
 	}
 }
+
+export type Px = `${number}px` | `${number}.${number}px`
