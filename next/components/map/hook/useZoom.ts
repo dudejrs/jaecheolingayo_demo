@@ -17,8 +17,8 @@ export default function  useZoom(svgRef: RefObject<SVGSVGElement | null>, ratio:
     const factor = direction === ZOOM_DIRECTION.IN ? 1 / zoomFactor : zoomFactor;
     const newRatio = ratio.scale(factor);
     const newBase = newRatio.originPointOf(midPoint);
-    setBase(newBase);
     setRatio(newRatio);
+    setBase(newBase);
   };
 
   const onDoubleClick = (event: React.MouseEvent<SVGSVGElement> ) => {

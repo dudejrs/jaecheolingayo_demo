@@ -14,11 +14,32 @@ export class Point{
 		return new Point(newX, newY)
 	}
 
+	plusRatio(ratio: Ratio) {
+		const newX = this.x + ratio.width 
+		const newY = this.y + ratio.height
+
+		return new Point(newX, newY)
+	}
+
 	minus(p: Point) {
 		const newX = this.x - p.x 
 		const newY = this.y - p.y
 
 		return new Point(newX, newY)
+	}
+
+	minusRatio(ratio: Ratio) {
+		const newX = this.x - ratio.width 
+		const newY = this.y - ratio.height
+
+		return new Point(newX, newY)
+	}
+
+	clamped(min: Point, max: Point) {
+		const clampedX = Math.min(Math.max(this.x, min.x), max.x)
+		const clampedY = Math.min(Math.max(this.y, min.y), max.y)
+
+		return new Point(clampedX, clampedY);
 	}
 
 	convert(realRatio: Ratio, ratio: Ratio, base: Point ) {
@@ -58,16 +79,16 @@ export class Ratio {
 		}
 
 		if (width > height) {
-			const new_width = baseRatio.width 
-			const new_height = baseRatio.width * height / width 
+			const newWidth = baseRatio.width 
+			const newHeight = baseRatio.width * height / width 
 
-			return new Ratio(new_width, new_height)
+			return new Ratio(newWidth, newHeight)
 		} 
 
-		const new_width = baseRatio.height * width / height
-		const new_height = baseRatio.height
+		const newWidth = baseRatio.height * width / height
+		const newHeight = baseRatio.height
 
-		return new Ratio(new_width, new_height)
+		return new Ratio(newWidth, newHeight)
 	}
 
 	originPointOf(midPoint : Point) : Point {
@@ -86,25 +107,25 @@ export class Ratio {
 	}
 
 	scale(r: number) : Ratio {
-		const new_width = this.width * r
-		const new_height = this.height * r
+		const newWidth = this.width * r
+		const newHeight = this.height * r
 
-		const clamped_width = Math.min(
-		Math.max(new_width, Ratio.MINIMUM.width),
+		const clampedWidth = Math.min(
+		Math.max(newWidth, Ratio.MINIMUM.width),
 			Ratio.MAXIMUM.width
 		);
-		const clamped_height = Math.min(
-			Math.max(new_height, Ratio.MINIMUM.height),
+		const clampedHeight = Math.min(
+			Math.max(newHeight, Ratio.MINIMUM.height),
 			Ratio.MAXIMUM.height
 		);
 
-		const original_aspect = this.width / this.height;
-		const clamped_aspect = clamped_width / clamped_height;
+		const originalAspect = this.width / this.height;
+		const clampedAspect = clampedWidth / clampedHeight;
 
-		if (original_aspect > clamped_aspect) {
-			return new Ratio(clamped_height * original_aspect, clamped_height);
+		if (originalAspect > clampedAspect) {
+			return new Ratio(clampedHeight * originalAspect, clampedHeight);
 		} else {
-			return new Ratio(clamped_width, clamped_width / original_aspect);
+			return new Ratio(clampedWidth, clampedWidth / originalAspect);
 		}
 	}
 

@@ -4,7 +4,7 @@ import {useEffect, useState, useRef} from 'react';
 import {Point, Ratio, Px} from './types';
 import {Path} from './geojson/types';
 import {useGeoJson} from './geojson';
-import {usePan, useZoom} from "./hook"
+import {usePan, useZoom, useViewbox} from "./hook"
 import {calculateStrokeWidth} from './util'
 
 interface StyleProps {
@@ -24,8 +24,6 @@ interface MapProps extends StyleProps {
 const DEFAULT_ORIGIN_POINT : Point = new Point(650000, 1430000)
 const DEFAULT_RATIO : Ratio = new Ratio(720000, 720000)
 const DEFAULT_MID_POINT : Point = DEFAULT_ORIGIN_POINT.midPointOf(DEFAULT_RATIO)
-const ZOOM_FACTOR = 1.12; 
-const MIN_VIEWBOX_SIZE = 10000;
 
 const DEFAULT_PATH_STYLES: StyleProps = {
 	strokeWidth: "0.8px",
@@ -43,13 +41,12 @@ export default function Map({
 	pathStyles=DEFAULT_PATH_STYLES
 } : MapProps) {
 
-	const [ratio, setRatio] = useState<Ratio>(Ratio.create(DEFAULT_RATIO, width, height))
-	const [base, setBase] = useState<Point>(ratio.originPointOf(DEFAULT_MID_POINT)) 
-
 	const svgRef = useRef<SVGSVGElement | null>(null);
+  const {ratio, setRatio, base, setBase} = useViewbox(DEFAULT_RATIO, DEFAULT_ORIGIN_POINT, DEFAULT_MID_POINT, width, height)
   const {onMouseDown, onMouseMove, onMouseUp} = usePan(svgRef, ratio, base, setBase)
   const {onDoubleClick, onWheel} = useZoom(svgRef,ratio, setRatio, base, setBase, 1.5)
   const paths: Path[] = useGeoJson('/data/boundaries.json')
+
 
 	return (
 		<div>
