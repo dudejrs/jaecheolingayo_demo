@@ -1,3 +1,5 @@
+const lerpFunc = (start: number, end: number, t: number) => start + (end - start) * t; 
+
 export class Point{
 	readonly x: number;
 	readonly y: number;
@@ -45,6 +47,15 @@ export class Point{
 	convert(realRatio: Ratio, ratio: Ratio, base: Point ) {
 		const newX = (this.x / realRatio.width) * ratio.width + base.x;
 		const newY = (this.y / realRatio.height) * ratio.height + base.y
+
+		return new Point(newX, newY)
+	}
+
+	lerp(t: number, target: Point): Point {
+		
+
+		const newX = lerpFunc(this.x, target.x, t)
+		const newY = lerpFunc(this.y, target.y, t)
 
 		return new Point(newX, newY)
 	}
@@ -127,6 +138,13 @@ export class Ratio {
 		} else {
 			return new Ratio(clampedWidth, clampedWidth / originalAspect);
 		}
+	}
+
+	lerp(t: number, target: Ratio): Ratio {
+		const newWidth = lerpFunc(this.width, target.width, t)
+		const newHeight = lerpFunc(this.height, target.height, t)
+
+		return new Ratio(newWidth, newHeight)
 	}
 
 	get min() {

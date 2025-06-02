@@ -7,13 +7,21 @@ import {useGeoJson} from './geojson';
 import {usePan, useZoom, useViewbox} from "./hook"
 import {calculateStrokeWidth} from './util'
 
-interface StyleProps {
+
+export interface ViewBoxProps {
+	base: Point
+	setBase: (b: Point) => void
+	ratio: Ratio,
+	setRatio: (r: Ratio) => void
+}
+
+export interface StyleProps {
 	stroke?: string
 	fill?: string,
 	strokeWidth?: Px | number,
 }
 
-interface MapProps extends StyleProps {
+export interface MapProps extends StyleProps {
 	width?: number,
 	height?: number,
   children?: React.ReactNode
@@ -38,11 +46,14 @@ export default function Map({
 	strokeWidth=1,
 	className = "",
 	fill="",
-	pathStyles=DEFAULT_PATH_STYLES
-} : MapProps) {
+	pathStyles=DEFAULT_PATH_STYLES,
+	ratio,
+	setRatio,
+	base,
+	setBase
+} : MapProps & ViewBoxProps) {
 
 	const svgRef = useRef<SVGSVGElement | null>(null);
-  const {ratio, setRatio, base, setBase} = useViewbox(DEFAULT_RATIO, DEFAULT_ORIGIN_POINT, DEFAULT_MID_POINT, width, height)
   const {onMouseDown, onMouseMove, onMouseUp} = usePan(svgRef, ratio, base, setBase)
   const {onDoubleClick, onWheel} = useZoom(svgRef,ratio, setRatio, base, setBase, 1.5)
   const paths: Path[] = useGeoJson('/data/boundaries.json')
