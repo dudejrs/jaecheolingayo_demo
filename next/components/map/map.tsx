@@ -64,8 +64,9 @@ export default function Map({
 	const svgRef = useRef<SVGSVGElement | null>(null);
 	const {onMouseDown, onMouseMove, onMouseUp} = usePan(svgRef, ratio, base, setBase)
 	const {onDoubleClick, onWheel} = useZoom(svgRef,ratio, setRatio, base, setBase, 1.5)
-	const [shouldLoadSigPaths, setShouldLoadSigPaths] = useState(false);
+
 	const ctprvn_paths: Path[] = useGeoJson('/data/ctprvn_boundaries.json')
+	const [shouldLoadSigPaths, setShouldLoadSigPaths] = useState(false);
 	const sig_paths : Path[] = useGeoJson('/data/sig_boundaries.json', shouldLoadSigPaths)
 
 	useEffect(() => {

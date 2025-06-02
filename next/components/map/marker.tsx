@@ -2,20 +2,23 @@
 import type {Coord} from "./bubbleMap"
 import {StyleProps} from "./map";
 import Text from "./text"
+import opentype from 'opentype.js';
 
 export interface MarkerProps {
 	className? : string
 	coord: Coord
 	size: number
+	font: opentype.Font
 	fontSize?: number
 	data?: number
 }
 
 export default function Marker({
 	className,
-	size,
-	fontSize,
 	coord,
+	size,
+	font,
+	fontSize,
 	data,
 	...kwargs
 }: MarkerProps & StyleProps) {
@@ -23,7 +26,7 @@ export default function Marker({
 		<g>
 			<circle cx={coord.x} cy={coord.y} r={size} className={className}  {...kwargs} />
 				{
-					data && (<Text text={data} size={size} x={coord.x} y={coord.y} stroke="blue" fill="white"/>)
+					data && (<Text text={data} font={font} size={size} x={coord.x} y={coord.y} stroke="blue" fill="white"/>)
 				}
 		</g>
 		)
