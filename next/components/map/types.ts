@@ -152,7 +152,7 @@ export class Ratio {
 	}
 
 	get k() {
-		return 720000 * 5 / this.min
+		return 720000 * 10 / this.min
 	}
 }
 

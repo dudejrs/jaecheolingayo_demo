@@ -27,16 +27,20 @@ export const GeoJsonToPaths= ({geometry}: {geometry: Geometry}): Path[] => {
 	return result
 }
 
-export function useGeoJson(url: string): Path[] {
+export function useGeoJson(url: string, shouldFetch: boolean = true): Path[] {
   const [paths, setPaths] = useState<Path[]>([]);
 
   useEffect(() => {
+    if (!shouldFetch) {
+      return 
+    }
+    
     fetch(url)
       .then(res => res.json())
       .then(json => json.map(GeoJsonToPaths))
       .then(setPaths)
       .catch(console.error);
-  }, [url]);
+  }, [url, shouldFetch]);
 
   return paths;
 }

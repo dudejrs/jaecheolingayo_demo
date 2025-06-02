@@ -33,16 +33,14 @@ function calculateMarkerSize(
   data: number| undefined,
   maxData: number,
   baseSize: number = 12,
-  maxSize: number = 28
+  maxSize: number = 32
 ): number {
 
 	if (!data) {
 		return (baseSize + maxSize) / 2
 	}
-	console.log(data, maxData)
-	const scalingFactor = data / maxData;
+	const scalingFactor = Math.sqrt(data / maxData);
 	const size = baseSize + scalingFactor * (maxSize - baseSize);
-	console.log(size)
 	return size
 }
 
@@ -54,7 +52,7 @@ export default function BubbleMap({
 }: MapProps & BubbleProps) {
 	const {ratio, setRatio, base, setBase} = useViewbox(DEFAULT_RATIO, DEFAULT_ORIGIN_POINT, DEFAULT_MID_POINT, width, height)
 	const [clusters, setClusters] = useState<Cluster[]>([])
-	const  totalClusters = useRef<number>(1)
+	const  totalClusters = useRef<number>(0)
 
 	useEffect(()=> {
 		const handler = setTimeout(()=> {
@@ -70,9 +68,10 @@ export default function BubbleMap({
 				.then(res => res.json())
 				.then(({clusters} : {clusters : Cluster[]})=> clusters)
 				.then(c => {
-					const counts = c.map((cluster) : number => cluster.data!)
-					totalClusters.current = Math.max(...counts)
-					console.log(counts, totalClusters.current)
+					if (!totalClusters.current){
+						const counts = c.map((cluster) : number => cluster.data!)
+						totalClusters.current = counts.reduce((acc, c) => acc + c, 0)
+					}
 					setClusters(c)
 				})
 		}, 500);

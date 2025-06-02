@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState, useRef} from 'react';
+import {useEffect, useState, useRef, useMemo} from 'react';
 import {Point, Ratio, Px} from './types';
 import {Path} from './geojson/types';
 import {useGeoJson} from './geojson';
@@ -26,17 +26,24 @@ export interface MapProps extends StyleProps {
 	height?: number,
   children?: React.ReactNode
   className?: string
-  pathStyles?: StyleProps
+  ctprvnPathStyles?: StyleProps
+  sigPathStyles?: StyleProps
 } 
 
 const DEFAULT_ORIGIN_POINT : Point = new Point(650000, 1430000)
 const DEFAULT_RATIO : Ratio = new Ratio(720000, 720000)
 const DEFAULT_MID_POINT : Point = DEFAULT_ORIGIN_POINT.midPointOf(DEFAULT_RATIO)
 
-const DEFAULT_PATH_STYLES: StyleProps = {
+const DEFAULT_CTPRVN_PATH_STYLES: StyleProps = {
 	strokeWidth: "0.8px",
 	fill:"var(--color-background-alt)",
 	stroke:"var(--color-border)"
+}
+
+const DEFAULT_SIG_PATH_STYLES: StyleProps = {
+	strokeWidth: "0.2px",
+	fill:"none",
+	stroke:"var(--color-border)",
 }
 
 export default function Map({
@@ -46,7 +53,8 @@ export default function Map({
 	strokeWidth=1,
 	className = "",
 	fill="",
-	pathStyles=DEFAULT_PATH_STYLES,
+	ctprvnPathStyles=DEFAULT_CTPRVN_PATH_STYLES,
+	sigPathStyles=DEFAULT_SIG_PATH_STYLES,
 	ratio,
 	setRatio,
 	base,
@@ -56,8 +64,18 @@ export default function Map({
 	const svgRef = useRef<SVGSVGElement | null>(null);
 	const {onMouseDown, onMouseMove, onMouseUp} = usePan(svgRef, ratio, base, setBase)
 	const {onDoubleClick, onWheel} = useZoom(svgRef,ratio, setRatio, base, setBase, 1.5)
-	const paths: Path[] = useGeoJson('/data/boundaries.json')
+	const [shouldLoadSigPaths, setShouldLoadSigPaths] = useState(false);
+	const ctprvn_paths: Path[] = useGeoJson('/data/ctprvn_boundaries.json')
+	const sig_paths : Path[] = useGeoJson('/data/sig_boundaries.json', shouldLoadSigPaths)
 
+	useEffect(() => {
+		if (!shouldLoadSigPaths && ratio.min < 360000) {
+			setShouldLoadSigPaths(true);
+		}
+	}, [ratio.min, shouldLoadSigPaths]);
+
+	useEffect(()=> {
+	},[shouldLoadSigPaths])
 
 	return (
 		<div>
@@ -77,20 +95,34 @@ export default function Map({
 					onDoubleClick={onDoubleClick}
 					onWheel={onWheel}
 				>
-			  <g id="regions">
-			  	{paths.map((d, idx) => (
-			  		<path
-			  			key={idx}
-			  			d={d}
-			  			{...pathStyles}
-			  			strokeWidth={calculateStrokeWidth(pathStyles.strokeWidth, new Ratio(width, height), ratio)}
-			  			style={{ cursor: 'pointer' }}
-			  			/>
-	  			))}
-			  </g>
-			  {
-			  	children
-			  }
+				<g id="ctprvn_regions">
+				  	{ctprvn_paths.map((d, idx) => (
+				  		<path
+				  			key={idx}
+				  			d={d}
+				  			{...ctprvnPathStyles}
+				  			strokeWidth={calculateStrokeWidth(ctprvnPathStyles.strokeWidth, new Ratio(width, height), ratio)}
+				  			style={{ cursor: 'pointer' }}
+				  			/>
+		  			))}
+				</g>
+				<g>
+				{
+					shouldLoadSigPaths && ratio.min < 360000 && sig_paths.length > 0 && 
+						sig_paths.map((d, idx) => (
+							<path
+								key={`sig-${idx}`}
+								d={d}
+								{...sigPathStyles}
+								strokeWidth={calculateStrokeWidth(sigPathStyles.strokeWidth, new Ratio(width, height), ratio)}
+								style={{ cursor: 'pointer', fill: 'rgba(0,0,0,0)' }}
+							/>
+						))
+				}
+				</g>	
+				{
+					children
+				}
 			</svg>
 		</div>
 		);
