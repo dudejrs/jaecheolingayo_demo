@@ -1,5 +1,5 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {getCoords} from '@/lib/db/seller'
+import {getCoords, getCoordsNear} from '@/lib/db/seller'
 
 type Coord = {
   x: number 
@@ -16,22 +16,24 @@ type Params = {
   y: number
   width: number
   height: number
+  k: number
 }
 
 function distance(p1: Coord, p2: Coord) {
   return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
 }
 
-function parseParams({x, y, width, height} : Partial<{x: string, y: string, width: string, height: string}>) : Params {
-  if (!x || !y || !width || !height) {
-    throw Error("x, y, width, height 쿼리 파라미터가 필요합니다.")
+function parseParams({x, y, width, height, k} : Partial<{x: string, y: string, width: string, height: string, k: string}>) : Params {
+  if (!x || !y || !width || !height || !k) {
+    throw Error("x, y, width, height, k 쿼리 파라미터가 필요합니다.")
   }
 
   return {
     x: parseFloat(x),
     y: parseFloat(y),
     width: parseFloat(width),
-    height: parseFloat(height)
+    height: parseFloat(height),
+    k : parseFloat(k)
   }
 }
 
@@ -97,11 +99,11 @@ function Kmeans(sellers: Seller[], k: number, iter: number, randomX: () => numbe
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const {x, y, width, height} = parseParams(req.query)
+  const {x, y, width, height, k} = parseParams(req.query)
 
-  const [K, iter] = [5, 5]
-  const sellers = await getCoords()
-  const clusters = Kmeans(sellers, K, iter, 
+  const iter = 30
+  const sellers = await getCoordsNear(x + width/2, y + height/2 , Math.min(width, height) * 0.8)
+  const clusters = Kmeans(sellers, k, iter, 
     () => x + Math.floor(Math.random() * width), 
     () => y + Math.floor(Math.random() * height)
   )

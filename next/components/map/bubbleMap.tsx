@@ -1,5 +1,5 @@
 'use client';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {Point, Ratio} from './types'
 import Map from "./map";
 import {useViewbox} from './hook';
@@ -21,37 +21,72 @@ export type Cluster = {
 	data?: number
 }
 
+export interface BubbleProps {
+	markerStyle?: StyleProps
+}
+
+const DEFAULT_MARKER_STYLE : StyleProps = {
+	fill: "var(--gray-50)"
+}
+
+function calculateMarkerSize(
+  data: number| undefined,
+  maxData: number,
+  baseSize: number = 12,
+  maxSize: number = 28
+): number {
+
+	if (!data) {
+		return (baseSize + maxSize) / 2
+	}
+	console.log(data, maxData)
+	const scalingFactor = data / maxData;
+	const size = baseSize + scalingFactor * (maxSize - baseSize);
+	console.log(size)
+	return size
+}
+
 export default function BubbleMap({
 	width = 600,
 	height = 600,
+	markerStyle = DEFAULT_MARKER_STYLE,
 	...props
-}: MapProps) {
+}: MapProps & BubbleProps) {
 	const {ratio, setRatio, base, setBase} = useViewbox(DEFAULT_RATIO, DEFAULT_ORIGIN_POINT, DEFAULT_MID_POINT, width, height)
 	const [clusters, setClusters] = useState<Cluster[]>([])
+	const  totalClusters = useRef<number>(1)
 
 	useEffect(()=> {
-		const params = new URLSearchParams({
-			x: base.x.toString(),
-			y: base.y.toString(),
-			width: ratio.width.toString(),
-			height: ratio.height.toString()
-		});
+		const handler = setTimeout(()=> {
+			const params = new URLSearchParams({
+				x: base.x.toString(),
+				y: base.y.toString(),
+				width: ratio.width.toString(),
+				height: ratio.height.toString(),
+				k : ratio.k.toString()
+			});
 
-		fetch(`/api/seller/kmeans?${params.toString()}`)
-			.then(res => res.json())
-			.then(({clusters})=> clusters)
-			.then(c => setClusters(c))
-	},[])
+			fetch(`/api/seller/kmeans?${params.toString()}`)
+				.then(res => res.json())
+				.then(({clusters} : {clusters : Cluster[]})=> clusters)
+				.then(c => {
+					const counts = c.map((cluster) : number => cluster.data!)
+					totalClusters.current = Math.max(...counts)
+					console.log(counts, totalClusters.current)
+					setClusters(c)
+				})
+		}, 500);
 
-	useEffect(() => {
-		console.log(clusters)
-	},[clusters])
+		return () => {
+			clearTimeout(handler)
+		}
+	},[ratio, base])
 
 	return (
 		<Map ratio={ratio} setRatio={setRatio} base={base} setBase={setBase} {...props}>
 			<g>
 				{
-					clusters.map(({coord, data}, i) => (<Marker key={i} coord={coord} data={data} size={calculateSize(30, new Ratio(width, height), ratio)} fill="red"/>))
+					clusters.map(({coord, data}, i) => (<Marker key={i} coord={coord} data={data} size={calculateSize(calculateMarkerSize(data, totalClusters.current), new Ratio(width, height), ratio)} {...markerStyle} />))
 				}
 			</g>
 		</Map>

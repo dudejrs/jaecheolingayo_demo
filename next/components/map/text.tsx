@@ -36,7 +36,7 @@ export default function Text({
 			const d = path.toPathData(2);
 			setPathData(d);
 		})
-	}, [])
+	})
 
 
 	return (

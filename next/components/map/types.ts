@@ -150,6 +150,10 @@ export class Ratio {
 	get min() {
 		return this.width < this.height ? this.width : this.height
 	}
+
+	get k() {
+		return 720000 * 5 / this.min
+	}
 }
 
 export type Px = `${number}px` | `${number}.${number}px`

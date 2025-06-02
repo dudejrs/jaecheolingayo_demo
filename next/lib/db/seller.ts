@@ -23,3 +23,31 @@ export async function getCoords(): Promise<Seller[]> {
 		await dataSource.destroy()
 	}
 }
+
+export async function getCoordsNear(x: number, y: number, r: number) {
+	const dataSource = await getDataSource()
+	try {
+		if (!dataSource.isInitialized) {
+			await dataSource.initialize()
+		}
+		const sellerRepository = dataSource.getRepository(Seller)
+		const sellers = await sellerRepository
+			.createQueryBuilder('seller')
+			.select(['seller.id', 'seller.coord'])
+			.where(
+				`ST_Distance(seller.coord, ST_GeomFromText(:point, 5179)) <= :radius `,
+				{
+					point: `POINT(${x} ${y})`,
+					radius: r
+				}
+			).getMany();
+
+		console.log(r)
+		return sellers
+	} catch (error) {
+		console.error('Error fetching sellers :', error)
+		throw error
+	}finally {
+		await dataSource.destroy()
+	}
+}
