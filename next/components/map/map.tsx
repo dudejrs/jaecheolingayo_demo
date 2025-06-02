@@ -54,16 +54,13 @@ export default function Map({
 } : MapProps & ViewBoxProps) {
 
 	const svgRef = useRef<SVGSVGElement | null>(null);
-  const {onMouseDown, onMouseMove, onMouseUp} = usePan(svgRef, ratio, base, setBase)
-  const {onDoubleClick, onWheel} = useZoom(svgRef,ratio, setRatio, base, setBase, 1.5)
-  const paths: Path[] = useGeoJson('/data/boundaries.json')
+	const {onMouseDown, onMouseMove, onMouseUp} = usePan(svgRef, ratio, base, setBase)
+	const {onDoubleClick, onWheel} = useZoom(svgRef,ratio, setRatio, base, setBase, 1.5)
+	const paths: Path[] = useGeoJson('/data/boundaries.json')
 
 
 	return (
 		<div>
-			{
-				children
-			}
 			<svg
 					ref={svgRef} 
 					className={`${className}`} 
@@ -91,6 +88,9 @@ export default function Map({
 			  			/>
 	  			))}
 			  </g>
+			  {
+			  	children
+			  }
 			</svg>
 		</div>
 		);

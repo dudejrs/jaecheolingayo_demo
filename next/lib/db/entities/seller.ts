@@ -10,7 +10,7 @@ import {
 import type { Relation } from 'typeorm'
 import {default as Item} from './item';
 import {default as Tag} from './tag';
-import {WktTransformer} from '../wkt'
+import {WktTransformer, type Point} from '../wkt'
 
 @Entity('NR_seller')
 export default class Seller {
@@ -43,7 +43,7 @@ export default class Seller {
 
   @Column({ type: 'geometry', spatialFeatureType: 'Point', srid: 5179, nullable: true,
     transformer: WktTransformer})
-  coord!: string;
+  coord!: Point;
 
   @OneToMany(() => Item, (item) => item.seller, { cascade: true })
   items!: Relation<Item[]>;

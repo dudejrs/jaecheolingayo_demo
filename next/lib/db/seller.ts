@@ -5,7 +5,7 @@ const TABLE_NAME = "NR_seller"
 
 export const getSellerCount = getCount(TABLE_NAME);
 
-export async function getCoords () {
+export async function getCoords(): Promise<Seller[]> {
 	const dataSource = await getDataSource()
 	try {
 		if (!dataSource.isInitialized) {
@@ -14,7 +14,6 @@ export async function getCoords () {
 		const sellerRepository = dataSource.getRepository(Seller)
 		const sellers = await sellerRepository.find({
 			select: {id: true, coord: true}, 
-			take: 10
 		})
 		return sellers
 	} catch (error) {

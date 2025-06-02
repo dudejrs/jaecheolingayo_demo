@@ -18,3 +18,10 @@ export function calculateStrokeWidth(strokeWidth: Px | number | undefined=1, tar
 	}
 	return originRatio.min * strokeWidth / targetRatio.min 
 }
+
+export function calculateSize(size: Px | number | undefined=1, targetRatio: Ratio, originRatio: Ratio) {
+	if (isPx(size)) {
+		size = Number.parseFloat(size)
+	}
+	return originRatio.min * size / targetRatio.min 
+}
