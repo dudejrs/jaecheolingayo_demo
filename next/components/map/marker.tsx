@@ -24,7 +24,7 @@ export default function Marker({
 }: MarkerProps & StyleProps) {
 	return (
 		<g>
-			<circle cx={coord.x} cy={coord.y} r={size} className={className}  {...kwargs} />
+			<circle cx={coord.x} cy={coord.y} r={size} className={className} {...kwargs} />
 				{
 					data && (<Text text={data} font={font} size={size} x={coord.x} y={coord.y} stroke="blue" fill="white"/>)
 				}

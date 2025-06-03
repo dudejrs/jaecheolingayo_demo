@@ -101,7 +101,7 @@ function Kmeans(sellers: Seller[], k: number, iter: number, randomX: () => numbe
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {x, y, width, height, k} = parseParams(req.query)
 
-  const iter = 5
+  const iter = 20
   const sellers = await getCoordsNear(x + width/2, y + height/2 , Math.min(width, height) * 0.8)
   const clusters = Kmeans(sellers, k, iter, 
     () => x + Math.floor(Math.random() * width), 

@@ -19,6 +19,7 @@ export interface StyleProps {
 	stroke?: string
 	fill?: string,
 	strokeWidth?: Px | number,
+	strokeOpacity? : string
 }
 
 export interface MapProps extends StyleProps {
@@ -41,9 +42,10 @@ const DEFAULT_CTPRVN_PATH_STYLES: StyleProps = {
 }
 
 const DEFAULT_SIG_PATH_STYLES: StyleProps = {
-	strokeWidth: "0.2px",
+	strokeWidth: "0.6px",
 	fill:"none",
 	stroke:"var(--color-border)",
+	strokeOpacity: "0.5"
 }
 
 export default function Map({
