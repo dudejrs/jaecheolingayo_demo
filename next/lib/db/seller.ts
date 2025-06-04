@@ -24,24 +24,41 @@ export async function getCoords(): Promise<Seller[]> {
 	}
 }
 
-export async function getCoordsNear(x: number, y: number, r: number) {
+export async function getCoordsNear(x: number, y: number, r: number, tags?: number[]) {
 	const dataSource = await getDataSource()
 	try {
 		if (!dataSource.isInitialized) {
 			await dataSource.initialize()
 		}
 		const sellerRepository = dataSource.getRepository(Seller)
-		const sellers = await sellerRepository
+		const query = sellerRepository
 			.createQueryBuilder('seller')
 			.select(['seller.id', 'seller.coord'])
-			.where(
-				`ST_Distance(seller.coord, ST_GeomFromText(:point, 5179)) <= :radius `,
-				{
-					point: `POINT(${x} ${y})`,
-					radius: r
-				}
-			).getMany();
 
+		if (tags && tags.length > 0) {
+			query
+				.leftJoin('seller.tags', 'tag')
+				.where(
+					`ST_Distance(seller.coord, ST_GeomFromText(:point, 5179)) <= :radius `,
+					{
+						point: `POINT(${x} ${y})`,
+						radius: r
+					}
+				);
+			query.andWhere('tag.id IN (:...tagIds)', {tagIds: tags});
+
+		} else {
+			query
+				.where(
+					`ST_Distance(seller.coord, ST_GeomFromText(:point, 5179)) <= :radius `,
+					{
+						point: `POINT(${x} ${y})`,
+						radius: r
+					}
+				);
+		}
+
+		const sellers = await query.getMany();
 		return sellers
 	} catch (error) {
 		console.error('Error fetching sellers :', error)

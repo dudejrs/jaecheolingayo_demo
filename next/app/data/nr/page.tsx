@@ -65,7 +65,7 @@ export default function Page() {
             </label>))
         }
       </div>
-      <BubbleMap width={1000} height={600} />
+      <BubbleMap width={1000} height={600} tags={selectedTags}/>
     </div>
   );
 }

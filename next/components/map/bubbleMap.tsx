@@ -24,6 +24,7 @@ export type Cluster = {
 
 export interface BubbleProps {
 	markerStyle?: StyleProps
+	tags?: number[]
 }
 
 const DEFAULT_MARKER_STYLE : StyleProps = {
@@ -49,6 +50,7 @@ export default function BubbleMap({
 	width = 600,
 	height = 600,
 	markerStyle = DEFAULT_MARKER_STYLE,
+	tags=[],
 	...props
 }: MapProps & BubbleProps) {
 	const {ratio, setRatio, base, setBase} = useViewbox(DEFAULT_RATIO, DEFAULT_ORIGIN_POINT, DEFAULT_MID_POINT, width, height)
@@ -63,7 +65,8 @@ export default function BubbleMap({
 				y: base.y.toString(),
 				width: ratio.width.toString(),
 				height: ratio.height.toString(),
-				k : ratio.k.toString()
+				k : ratio.k.toString(),
+				tags : tags && tags.toString(),
 			});
 
 			fetch(`/api/seller/kmeans?${params.toString()}`)
