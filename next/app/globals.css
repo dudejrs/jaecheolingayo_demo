@@ -25,11 +25,12 @@
   --gray-80: #cccccc;
   --gray-90: #e6e6e6;
 
-  --background: var(--gray-90); 
+  --background: #f5f5f5; 
   --foreground: #171717;
   --color-background-alt: var(--gray-80);
   --color-text-primary : var(--gray-10);
   --color-text-secondary: var(--gray-20);
+  --color-text-inversed: var(--background);
   --color-border: var(--gray-60);
   --color-border-focus: var(--gray-10);
   --color-primary: var(--gray-80);
@@ -51,7 +52,8 @@
     --foreground: #ededed;
     --color-background-alt: var(--gray-20);
     --color-text-primary : var(--gray-10);
-    --color-text-secondary: var(--gray-20);
+    --color-text-secondary: var(--gray-90);
+    --color-text-inversed: var(--background);
     --color-border: var(--gray-70);
     --color-border-focus: var(--gray-10);
     --color-primary: var(--gray-80);

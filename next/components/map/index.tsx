@@ -1,5 +1,5 @@
 'use  client';
-export {default as Map} from "./map"
 export {default as BubbleMap} from './bubbleMap'
+export {default as Map} from "./default"
 
 export default Map

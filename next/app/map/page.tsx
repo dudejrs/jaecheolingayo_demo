@@ -1,14 +1,38 @@
-'use client';
+"use client"
 
-import {BubbleMap} from "@/components/map"
+import Markdown from '@/components/markdown';
+import {BubbleMap, Map} from "@/components/map"
+import NavLink from "@/components/NavLink"
+import Image from "next/image";
+import Layout from "./layout"
 
 
-export default function Test() {
+const content1 = `
+##### **Type1** SVG 기반 컴포넌트   
+
+
+SVG 기반 컴포넌트 입니다. (작성중...)
+`
+
+const content2 = `
+##### **Type2** 네이버 API 기반 컴포넌트 
+
+추가적으로 개발할 예정입니다. (작성중...)
+`
+
+
+export default function MapPage() {
 
 	return (
-		<div>
-			<BubbleMap width={600} height={600} className="border-1" />
-		</div>
-
+		<ul>
+			<li className="flex flex-wrap pb-12 gap-4">
+				<Map width={600} height={600} className="bodred-1" />
+				<Markdown content={content1} />
+			</li>
+			<li className="flex flex-wrap gap-4"> 
+				<Image src="" alt="" width={600} height={600} />
+				<Markdown content={content2} />
+			</li>
+		</ul>
 		);
 }

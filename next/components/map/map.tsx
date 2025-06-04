@@ -75,7 +75,7 @@ export default function Map({
 		if (!shouldLoadSigPaths && ratio.min < 360000) {
 			setShouldLoadSigPaths(true);
 		}
-	}, [ratio.min, shouldLoadSigPaths]);
+	}, [ratio, shouldLoadSigPaths]);
 
 	useEffect(()=> {
 	},[shouldLoadSigPaths])
