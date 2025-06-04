@@ -33,7 +33,7 @@
   --color-text-inversed: var(--background);
   --color-border: var(--gray-60);
   --color-border-focus: var(--gray-10);
-  --color-primary: var(--gray-80);
+  --color-primary: var(--pccs-blue-light);
   --color-primary-hover: var(--gray-10);
   --color-error: var(--gray-10);
   --color-success : var(--gray-10);
@@ -56,7 +56,7 @@
     --color-text-inversed: var(--background);
     --color-border: var(--gray-70);
     --color-border-focus: var(--gray-10);
-    --color-primary: var(--gray-80);
+    --color-primary: var(--pccs-blue-light);
     --color-primary-hover: var(--gray-10);
     --color-error: var(--gray-10);
     --color-success : var(--gray-10);

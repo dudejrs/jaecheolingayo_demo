@@ -84,7 +84,7 @@ export default function BubbleMap({
 	},[ratio, base])
 
 	return (
-		<Map ratio={ratio} setRatio={setRatio} base={base} setBase={setBase} {...props}>
+		<Map width={width} height={height} ratio={ratio} setRatio={setRatio} base={base} setBase={setBase} {...props}>
 			<g>
 				{
 					font && clusters.map(({coord, data}, i) => (<Marker key={i} coord={coord} font={font} data={data} size={calculateSize(calculateMarkerSize(data, totalClusters.current), new Ratio(width, height), ratio)} {...markerStyle}/>))

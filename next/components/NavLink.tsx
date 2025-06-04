@@ -16,6 +16,7 @@ export default function NavLink({
   children,
   activeClassName = 'text-blue-500 font-bold',
   className = '',
+  style={},
 }: NavLinkProps) {
   const pathname = usePathname()
   const isActive = pathname === href
@@ -24,6 +25,7 @@ export default function NavLink({
     <Link
       href={href}
       className={clsx(className, isActive && activeClassName)}
+      style={style}
     >
       {children}
     </Link>

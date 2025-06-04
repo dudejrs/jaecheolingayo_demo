@@ -13,7 +13,6 @@ export default function MapPage() {
 				<BubbleMap width={600} height={600} className="bodred-1" />
 			</div>
 			<ReactMarkdown>
-				sss
 			</ReactMarkdown>
 		</div>
 		);

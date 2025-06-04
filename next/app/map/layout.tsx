@@ -1,6 +1,6 @@
 "use client"
 
-import NavLink from "@/components/NavLink"
+import NavLink from "@/components/navLink"
 
 
 export default function MapPage({children}: 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import NavLink from "@/components/NavLink"
+import NavLink from "@/components/navLink"
 
 import "./globals.css";
 
@@ -29,8 +29,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="gap px-12 py-12">
-          <div className="flex justify-between mb-6"> 
+        <div className="py-12">
+          <div className="px-12 flex justify-between mb-6"> 
               <NavLink href="/" activeClassName="" className="font-bold text-3xl"> 제철인가요 개발 </NavLink>
               <div className="mr-16 text-lg flex gap-4">
                 <NavLink href="/map">지도</NavLink>
