@@ -2,12 +2,12 @@
 
 import Breadcrumb from "@/components/breadcrumb"
 
-const styles = {
+const style = {
 	backgroundColor : "var(--color-background-alt)",
 	color: "var(--color-text-secondary)"
 }
 
-export default function Layout({children}: Readonly<{chiildren :React.ReactNode;
+export default function Layout({children}: Readonly<{children :React.ReactNode;
 }>){
 
 	const labels = {
@@ -16,7 +16,7 @@ export default function Layout({children}: Readonly<{chiildren :React.ReactNode;
 	}
 	return (
 			<div>
-				<div className="p-4 h-75 mb-4 flex flex-col content-between" style={styles}>
+				<div className="p-4 h-75 mb-4 flex flex-col content-between" style={style}>
 					<Breadcrumb className="ml-12" basePath={"/data"} labels={labels}/>
         			<div className="px-12"> 데이터 스크래핑 진행상황 및 데이터 분석을 위한 페이지 입니다. </div>
       			</div>

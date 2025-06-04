@@ -9,6 +9,7 @@ interface NavLinkProps {
   children: React.ReactNode
   activeClassName?: string
   className?: string
+  style? : React.CSSProperties
 }
 
 export default function NavLink({

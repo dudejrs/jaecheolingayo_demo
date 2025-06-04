@@ -7,9 +7,13 @@ import { usePathname } from 'next/navigation';
 interface BreadcrumbProps {
   basePath?: string; 
   labels?: {
-    [string] : string
+    [key: string] : string
   },
   className? : string
+}
+
+interface Labels {
+  [key: string] : string
 }
 
 function getRelativePath(path: string, basePath: string = "") {
@@ -21,13 +25,13 @@ function getRelativePath(path: string, basePath: string = "") {
     : path;
 }
 
-function caclulateLabel(segment: string, labels?: string[]) {
+function caclulateLabel(segment: string, labels?: Labels) {
   return labels && Object.keys(labels).includes(segment) ? labels[segment] : segment.charAt(0).toUpperCase() + segment.slice(1);
 }
 
-export default function Breadcrumb({ className= '', basePath = '', labels = [] }: BreadcrumbProps){
+export default function Breadcrumb({ className= '', basePath = '', labels = {} }: BreadcrumbProps){
 
-  const path = usePathname();
+  const path = usePathname() ?? '';
   const relativePath = getRelativePath(path, basePath)
 
   const pathSegments = relativePath.split('/').filter((segment) => segment );
