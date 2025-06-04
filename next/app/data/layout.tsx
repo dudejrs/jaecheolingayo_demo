@@ -1,6 +1,5 @@
 'use client'
 
-import NavLink from "@/components/NavLink"
 import Breadcrumb from "@/components/breadcrumb"
 
 const styles = {
