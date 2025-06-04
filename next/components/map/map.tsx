@@ -84,7 +84,7 @@ export default function Map({
 		<div>
 			<svg
 					ref={svgRef} 
-					className={`${className}`} 
+					className={`overscroll-contain ${className}`} 
 					fill={`${fill}`} 
 					width={width} 
 					height={height} 

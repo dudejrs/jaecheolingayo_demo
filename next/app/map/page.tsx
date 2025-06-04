@@ -3,7 +3,6 @@
 import Markdown from '@/components/markdown';
 import {BubbleMap, Map} from "@/components/map"
 import NavLink from "@/components/navLink"
-import Image from "next/image";
 
 
 const content1 = `
@@ -29,7 +28,7 @@ export default function MapPage() {
 				<Markdown content={content1} />
 			</li>
 			<li className="flex flex-wrap gap-4"> 
-				<Image src="" alt="" width={600} height={600} />
+				<div className="w-150 h-150 border-1"> </div>
 				<Markdown content={content2} />
 			</li>
 		</ul>

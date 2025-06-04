@@ -42,7 +42,6 @@ export async function getCoordsNear(x: number, y: number, r: number) {
 				}
 			).getMany();
 
-		console.log(r)
 		return sellers
 	} catch (error) {
 		console.error('Error fetching sellers :', error)

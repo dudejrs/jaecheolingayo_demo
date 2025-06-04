@@ -48,7 +48,7 @@ export default function Breadcrumb({ className= '', basePath = '', labels = {} }
             <Link href={href} className="text-blue-600 hover:underline">
               {label}
             </Link>
-            <span className="mx-2 text-gray-500"> &gt </span>
+            <span className="mx-2 text-gray-500"> {`>`} </span>
           </>
         ) : (
           <span className="text-gray-500">{label}</span>
@@ -64,7 +64,7 @@ export default function Breadcrumb({ className= '', basePath = '', labels = {} }
           <Link href={basePath} className="text-blue-600 hover:underline">
             {caclulateLabel(basePath, labels)}
           </Link>
-          {pathSegments.length > 0 && <span className="mx-2 text-gray-500"> &gt </span>}
+          {pathSegments.length > 0 && <span className="mx-2 text-gray-500"> {`>`} </span>}
         </li>
         {breadcrumbs}
       </ol>
