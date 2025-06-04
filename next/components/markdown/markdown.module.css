@@ -1,0 +1,57 @@
+
+.markdown {
+  white-space: pre-wrap;
+}
+
+.markdown h1, 
+.markdown h2, 
+.markdown h3, 
+.markdown h4, 
+.markdown h5 {
+  font-weight:  bold;
+}
+
+.markdown h1 strong,
+.markdown h2 strong,
+.markdown h3 strong,
+.markdown h4 strong,
+.markdown h5 strong {
+  background-color: var(--gray-50);
+  color: var(--color-text-inversed);
+  padding : 0.2rem 0.2rem;
+  margin-right: 0.2rem;
+  border-radius: 0.4rem;
+}
+
+.markdown h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.markdown h2 {
+  font-size: 1.9rem;
+}
+
+.markdown h3 {
+  font-size: 1.8rem;
+}
+
+.markdown h4 {
+  font-size: 1.5rem;
+}
+
+.markdown h5 {
+  font-size: 1.2rem;
+}
+
+.markdown ol {
+  list-style-type: decimal;
+}
+
+.markdown ul {
+  list-style-type: disc;
+}
+
+.markdown li {
+  margin-left: 1.2rem;
+}
