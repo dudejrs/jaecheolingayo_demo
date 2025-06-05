@@ -1,5 +1,5 @@
 'use client';
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, useMemo} from 'react';
 import {Point, Ratio} from './types'
 import Map from "./map";
 import {useViewbox} from './hook';
@@ -50,24 +50,29 @@ export default function BubbleMap({
 	width = 600,
 	height = 600,
 	markerStyle = DEFAULT_MARKER_STYLE,
-	tags=[],
+	tags,
 	...props
 }: MapProps & BubbleProps) {
 	const {ratio, setRatio, base, setBase} = useViewbox(DEFAULT_RATIO, DEFAULT_ORIGIN_POINT, DEFAULT_MID_POINT, width, height)
 	const [clusters, setClusters] = useState<Cluster[]>([])
 	const totalClusters = useRef<number>(0)
+
 	const font = useFont();
 
 	useEffect(()=> {
 		const handler = setTimeout(()=> {
+			console.log(base, ratio, ratio.k, tags)
 			const params = new URLSearchParams({
 				x: base.x.toString(),
 				y: base.y.toString(),
 				width: ratio.width.toString(),
 				height: ratio.height.toString(),
 				k : ratio.k.toString(),
-				tags : tags && tags.toString(),
 			});
+			if (tags) {
+				params.set("tags", tags.toString())
+			}
+			console.log(params)
 
 			fetch(`/api/seller/kmeans?${params.toString()}`)
 				.then(res => res.json())
@@ -84,7 +89,7 @@ export default function BubbleMap({
 		return () => {
 			clearTimeout(handler)
 		}
-	},[ratio, base])
+	},[ratio, base, tags])
 
 	return (
 		<Map width={width} height={height} ratio={ratio} setRatio={setRatio} base={base} setBase={setBase} {...props}>

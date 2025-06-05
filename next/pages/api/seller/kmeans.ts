@@ -37,6 +37,8 @@ function parseParams({x, y, width, height, k, tags} : Partial<{x: string, y: str
     throw Error("x, y, width, height, k 쿼리 파라미터가 필요합니다.")
   }
 
+  console.log(tags)
+
   return {
     x: parseFloat(x),
     y: parseFloat(y),
@@ -110,7 +112,7 @@ function Kmeans(sellers: Seller[], k: number, iter: number, randomX: () => numbe
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {x, y, width, height, k, tags} = parseParams(req.query)
-
+  console.log(tags)
   const iter = 20
   const sellers = await getCoordsNear(x + width/2, y + height/2 , Math.min(width, height) * 0.8, tags)
   const clusters = Kmeans(sellers, k, iter, 
@@ -118,5 +120,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     () => y + Math.floor(Math.random() * height)
   )
     
-  res.status(200).json({clusters});
+  res.status(200).json({ clusters});
 }
