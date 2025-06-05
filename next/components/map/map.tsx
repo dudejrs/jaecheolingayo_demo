@@ -67,12 +67,12 @@ export default function Map({
 	const {onMouseDown, onMouseMove, onMouseUp} = usePan(svgRef, ratio, base, setBase)
 	const {onDoubleClick, onWheel} = useZoom(svgRef,ratio, setRatio, base, setBase, 1.5)
 
-	const ctprvn_paths: Path[] = useGeoJson('/data/ctprvn_boundaries.json')
+	const ctprvn_paths: Path[] = useGeoJson('/data/ctprvn_boundaries.json', DEFAULT_ORIGIN_POINT.x, DEFAULT_ORIGIN_POINT.y, DEFAULT_RATIO.width, DEFAULT_RATIO.height )
 	const [shouldLoadSigPaths, setShouldLoadSigPaths] = useState(false);
-	const sig_paths : Path[] = useGeoJson('/data/sig_boundaries.json', shouldLoadSigPaths)
+	const sig_paths : Path[] = useGeoJson('/data/sig_boundaries.json', DEFAULT_ORIGIN_POINT.x, DEFAULT_ORIGIN_POINT.y, DEFAULT_RATIO.width, DEFAULT_RATIO.height, shouldLoadSigPaths)
 
 	useEffect(() => {
-		if (!shouldLoadSigPaths && ratio.min < 360000) {
+		if (!shouldLoadSigPaths && ratio.min < DEFAULT_RATIO.min / 2) {
 			setShouldLoadSigPaths(true);
 		}
 	}, [ratio, shouldLoadSigPaths]);
@@ -88,9 +88,10 @@ export default function Map({
 					fill={`${fill}`} 
 					width={width} 
 					height={height} 
-					viewBox={`${base.x} ${base.y} ${ratio.width} ${ratio.height}`} 
+					// viewBox={`${base.x} ${base.y} ${ratio.width} ${ratio.height}`} 
+					viewBox={`${0} ${0} ${ratio.width} ${ratio.height}`} 
 					xmlns="http://www.w3.org/2000/svg"
-					style={{ transform: 'scaleY(-1)' }} 
+					// style={{ transform: 'scaleY(-1)' }} 
 					onMouseDown={onMouseDown}
 					onMouseMove={onMouseMove}
 					onMouseUp={onMouseUp}
@@ -111,7 +112,7 @@ export default function Map({
 				</g>
 				<g>
 				{
-					shouldLoadSigPaths && ratio.min < 360000 && sig_paths.length > 0 && 
+					shouldLoadSigPaths && ratio.min < DEFAULT_RATIO.min / 2 && sig_paths.length > 0 && 
 						sig_paths.map((d, idx) => (
 							<path
 								key={`sig-${idx}`}

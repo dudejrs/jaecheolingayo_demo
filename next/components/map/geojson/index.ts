@@ -17,17 +17,23 @@ export function multiPolygonToPath(multiPolygonCoords: MultiPolygon[], proj: Coo
   return path.trim();
 }
 
-export const GeoJsonToPaths= ({geometry}: {geometry: Geometry}): Path[] => {
+export const GeometryToPaths= (geometry: Geometry, baseX: number, baseY: number, width: number, height: number): Path[] => {
 	const result: Path[] = [];
 
 	if (geometry.type === 'MultiPolygon') {
-		const d = multiPolygonToPath(geometry.coordinates);
+		const d = multiPolygonToPath(geometry.coordinates, mapCoordianation(baseX, baseY, width, height));
 		result.push(d);
 	}
 	return result
 }
 
-export function useGeoJson(url: string, shouldFetch: boolean = true): Path[] {
+export function mapCoordianation(baseX: number, baseY: number, width: number, height : number )  {
+  return function ([x, y] : Path) {
+    return [x- baseX, baseY + height - y]
+  }
+}
+
+export function useGeoJson(url: string, baseX: number, baseY: number, width: number, height: number, shouldFetch: boolean = true): Path[] {
   const [paths, setPaths] = useState<Path[]>([]);
 
   useEffect(() => {
@@ -37,7 +43,7 @@ export function useGeoJson(url: string, shouldFetch: boolean = true): Path[] {
     
     fetch(url)
       .then(res => res.json())
-      .then(json => json.map(GeoJsonToPaths))
+      .then(json => json.map(({geometry} : {geometry: Geometry}) => GeometryToPaths(geometry, baseX, baseY, width, height)))
       .then(setPaths)
       .catch(console.error);
   }, [url, shouldFetch]);

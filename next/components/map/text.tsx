@@ -32,7 +32,7 @@ export default function Text({
 	  }, [text, size, font]);
 
 	return (
-		<g transform={`translate(${x}, ${y}) scale(1, -1)`}>
+		<g transform={`translate(${x}, ${y})`}>
 			{
 				pathData && <path d={pathData} fill="white" stroke="blue"/>
 			}

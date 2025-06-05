@@ -1,5 +1,5 @@
 'use client';
-import {useState, useEffect, useRef, useMemo} from 'react';
+import {useCallback, useState, useEffect, useRef, useMemo} from 'react';
 import {Point, Ratio} from './types'
 import Map from "./map";
 import {useViewbox} from './hook';
@@ -58,10 +58,16 @@ export default function BubbleMap({
 	const totalClusters = useRef<number>(0)
 
 	const font = useFont();
+	const mapCoords = useCallback(({x, y}: Coord)=>{
+		return {
+			x : x - base.x,
+			y : base.y + ratio.height - y
+		}
+	},[ratio, base])
 
 	useEffect(()=> {
 		const handler = setTimeout(()=> {
-			console.log(base, ratio, ratio.k, tags)
+
 			const params = new URLSearchParams({
 				x: base.x.toString(),
 				y: base.y.toString(),
@@ -72,7 +78,6 @@ export default function BubbleMap({
 			if (tags) {
 				params.set("tags", tags.toString())
 			}
-			console.log(params)
 
 			fetch(`/api/seller/kmeans?${params.toString()}`)
 				.then(res => res.json())
@@ -86,6 +91,8 @@ export default function BubbleMap({
 				})
 		}, 500);
 
+
+
 		return () => {
 			clearTimeout(handler)
 		}
@@ -95,7 +102,7 @@ export default function BubbleMap({
 		<Map width={width} height={height} ratio={ratio} setRatio={setRatio} base={base} setBase={setBase} {...props}>
 			<g>
 				{
-					font && clusters.map(({coord, data}, i) => (<Marker key={i} coord={coord} font={font} data={data} size={calculateSize(calculateMarkerSize(data, totalClusters.current), new Ratio(width, height), ratio)} {...markerStyle}/>))
+					font && clusters.map(({coord, data}, i) => (<Marker key={i} coord={mapCoords(coord)} font={font} data={data} size={calculateSize(calculateMarkerSize(data, totalClusters.current), new Ratio(width, height), ratio)} {...markerStyle}/>))
 				}
 			</g>
 		</Map>
