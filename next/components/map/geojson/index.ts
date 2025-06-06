@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import {MultiPolygon, CoordPorjection, Geometry, Path, Point, Polygon} from './types'
+import {MultiPolygon, CoordPorjection, Geometry, Path, PathInformation, Point, Polygon} from './types'
 
 export function multiPolygonToPath(multiPolygonCoords: MultiPolygon[], proj: CoordPorjection = ([x, y]) => [x, y]): Path {
   let path = '';
@@ -17,14 +17,26 @@ export function multiPolygonToPath(multiPolygonCoords: MultiPolygon[], proj: Coo
   return path.trim();
 }
 
-export const GeometryToPaths= (geometry: Geometry, baseX: number, baseY: number, width: number, height: number): Path[] => {
-	const result: Path[] = [];
-
+export const geometryToPaths= (geometry: Geometry, baseX: number, baseY: number, width: number, height: number): Path => {
 	if (geometry.type === 'MultiPolygon') {
-		const d = multiPolygonToPath(geometry.coordinates, mapCoordianation(baseX, baseY, width, height));
-		result.push(d);
+		return multiPolygonToPath(geometry.coordinates, mapCoordianation(baseX, baseY, width, height));
+		
 	}
-	return result
+	return ''
+}
+
+export function geoJsonToPathInformation (baseX : number, baseY: number, width: number, height:number) {
+
+  return function ({geometry, properties} : {geometry: Geometry, properties: {[property: string] : string}})
+     : PathInformation {
+
+    const path = geometryToPaths(geometry, baseX, baseY, width, height);
+
+    return {
+      path: path,
+      ...properties
+    }
+  } 
 }
 
 export function mapCoordianation(baseX: number, baseY: number, width: number, height : number ) {
@@ -33,8 +45,8 @@ export function mapCoordianation(baseX: number, baseY: number, width: number, he
   }
 }
 
-export function useGeoJson(url: string, baseX: number, baseY: number, width: number, height: number, shouldFetch: boolean = true): Path[] {
-  const [paths, setPaths] = useState<Path[]>([]);
+export function useGeoJson(url: string, baseX: number, baseY: number, width: number, height: number, shouldFetch: boolean = true): PathInformation[] {
+  const [pathInformations, setPathInformations] = useState<PathInformation[]>([]);
 
   useEffect(() => {
     if (!shouldFetch) {
@@ -43,10 +55,11 @@ export function useGeoJson(url: string, baseX: number, baseY: number, width: num
     
     fetch(url)
       .then(res => res.json())
-      .then(json => json.map(({geometry} : {geometry: Geometry}) => GeometryToPaths(geometry, baseX, baseY, width, height)))
-      .then(setPaths)
+      .then(json => json.map(geoJsonToPathInformation(baseX, baseY, width, height)))
+      .then(setPathInformations)
       .catch(console.error);
+
   }, [url, shouldFetch]);
 
-  return paths;
+  return pathInformations;
 }

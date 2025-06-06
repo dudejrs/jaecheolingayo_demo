@@ -8,3 +8,7 @@ export interface Geometry {
 }
 export type Path = string
 export type CoordPorjection = (coord: Point) => Point
+export type PathInformation = {
+	path: Path,
+	[properties: string]: string
+}

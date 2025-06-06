@@ -2,6 +2,49 @@
 
 :root {
 
+   /* Vivid Tone */
+  --pccs-red-vivid: #e60012;
+  --pccs-red-orange-vivid: #f39800;
+  --pccs-orange-vivid: #f6aa00;
+  --pccs-yellow-orange-vivid: #f6e600;
+  --pccs-yellow-vivid: #fff100;
+  --pccs-yellow-green-vivid: #00a95f;
+  --pccs-green-vivid: #00a95f;
+  --pccs-blue-green-vivid: #00a0e9;
+  --pccs-cyan-vivid: #0095d9;
+  --pccs-blue-vivid: #0068b7;
+  --pccs-blue-purple-vivid: #920783;
+  --pccs-purple-vivid: #920783;
+
+  /* Strong Tone */
+  --pccs-red-strong: #d7003a;
+  --pccs-red-orange-strong: #e17c00;
+  --pccs-orange-strong: #e17c00;
+  --pccs-yellow-orange-strong: #e5c900;
+  --pccs-yellow-strong: #e5c900;
+  --pccs-yellow-green-strong: #00a95f;
+  --pccs-green-strong: #008e4f;
+  --pccs-blue-green-strong: #008eaa;
+  --pccs-cyan-strong: #007bbb;
+  --pccs-blue-strong: #005bac;
+  --pccs-blue-purple-strong: #7b1e6a;
+  --pccs-purple-strong: #7b1e6a;
+
+  /* Bright Tone */
+  --pccs-red-bright: #f05e6c;
+  --pccs-red-orange-bright: #f6aa00;
+  --pccs-orange-bright: #f6aa00;
+  --pccs-yellow-orange-bright: #f6e600;
+  --pccs-yellow-bright: #f6e600;
+  --pccs-yellow-green-bright: #00b16a;
+  --pccs-green-bright: #00b16a;
+  --pccs-blue-green-bright: #00a0e9;
+  --pccs-cyan-bright: #0095d9;
+  --pccs-blue-bright: #007ac1;
+  --pccs-blue-purple-bright: #a757a8;
+  --pccs-purple-bright: #a757a8;
+
+  /* Light Tone */
   --pccs-red-light: #f4cccc;
   --pccs-red-orange-light: #fce5cd;
   --pccs-orange-light: #fff2cc;
@@ -14,7 +57,106 @@
   --pccs-blue-light: #c9daf8;
   --pccs-blue-purple-light: #d9d2e9;
   --pccs-purple-light: #ead1dc;
-  --pccs-red-purple-light: #f4cccc;
+
+  /* Pale Tone */
+  --pccs-red-pale: #fbb4c4;
+  --pccs-red-orange-pale: #fdcdb7;
+  --pccs-orange-pale: #fdcdb7;
+  --pccs-yellow-orange-pale: #fee6aa;
+  --pccs-yellow-pale: #fee6aa;
+  --pccs-yellow-green-pale: #ccebc5;
+  --pccs-green-pale: #ccebc5;
+  --pccs-blue-green-pale: #b3cde3;
+  --pccs-cyan-pale: #b3cde3;
+  --pccs-blue-pale: #b3cde3;
+  --pccs-blue-purple-pale: #cab2d6;
+  --pccs-purple-pale: #cab2d6;
+
+  /* Soft Tone */
+  --pccs-red-soft: #e6b8af;
+  --pccs-red-orange-soft: #f9cb9c;
+  --pccs-orange-soft: #f9cb9c;
+  --pccs-yellow-orange-soft: #fff2cc;
+  --pccs-yellow-soft: #fff2cc;
+  --pccs-yellow-green-soft: #b6d7a8;
+  --pccs-green-soft: #b6d7a8;
+  --pccs-blue-green-soft: #a2c4c9;
+  --pccs-cyan-soft: #a2c4c9;
+  --pccs-blue-soft: #a2c4c9;
+  --pccs-blue-purple-soft: #d5a6bd;
+  --pccs-purple-soft: #d5a6bd;
+
+  /* Dull Tone */
+  --pccs-red-dull: #9e002c;
+  --pccs-red-orange-dull: #a41200;
+  --pccs-orange-dull: #a34a02;
+  --pccs-yellow-orange-dull: #a38204;
+  --pccs-yellow-dull: #a38204;
+  --pccs-yellow-green-dull: #518517;
+  --pccs-green-dull: #2f6f41;
+  --pccs-blue-green-dull: #025965;
+  --pccs-cyan-dull: #025965;
+  --pccs-blue-dull: #073e73;
+  --pccs-blue-purple-dull: #232166;
+  --pccs-purple-dull: #531460;
+
+  /* Dark Tone */
+  --pccs-red-dark: #8b0000;
+  --pccs-red-orange-dark: #a0522d;
+  --pccs-orange-dark: #a0522d;
+  --pccs-yellow-orange-dark: #8b8000;
+  --pccs-yellow-dark: #8b8000;
+  --pccs-yellow-green-dark: #006400;
+  --pccs-green-dark: #006400;
+  --pccs-blue-green-dark: #00008b;
+  --pccs-cyan-dark: #00008b;
+  --pccs-blue-dark: #00008b;
+  --pccs-blue-purple-dark: #4b0082;
+  --pccs-purple-dark: #4b0082;
+
+  /* Deep Tone */
+  --pccs-red-deep: #9e002c;
+  --pccs-red-orange-deep: #a41200;
+  --pccs-orange-deep: #a34a02;
+  --pccs-yellow-orange-deep: #a38204;
+  --pccs-yellow-deep: #a38204;
+  --pccs-yellow-green-deep: #518517;
+  --pccs-green-deep: #2f6f41;
+  --pccs-blue-green-deep: #025965;
+  --pccs-cyan-deep: #025965;
+  --pccs-blue-deep: #073e73;
+  --pccs-blue-purple-deep: #232166;
+  --pccs-purple-deep: #531460;
+
+  /* Light Grayish Tone */
+  --pccs-red-light-grayish: #e6cdd5;
+  --pccs-red-orange-light-grayish: #f9e0c7;
+  --pccs-orange-light-grayish: #f9e0c7;
+  --pccs-yellow-orange-light-grayish: #f9f2c7;
+  --pccs-yellow-light-grayish: #f9f2c7;
+  --pccs-yellow-green-light-grayish: #d9e6d3;
+  --pccs-green-light-grayish: #d9e6d3;
+  --pccs-blue-green-light-grayish: #d0d9e3;
+  --pccs-cyan-light-grayish: #d0d9e3;
+  --pccs-blue-light-grayish: #d0d9e3;
+  --pccs-blue-purple-light-grayish: #e3d1dc;
+  --pccs-purple-light-grayish: #e3d1dc;
+
+  /* Grayish Tone */
+  --pccs-red-grayish: #c8a2c8;
+  --pccs-red-orange-grayish: #d2b48c;
+  --pccs-orange-grayish: #d2b48c;
+  --pccs-yellow-orange-grayish: #c8c8a2;
+  --pccs-yellow-grayish: #c8c8a2;
+  --pccs-yellow-green-grayish: #a2c8a2;
+  --pccs-green-grayish: #a2c8a2;
+  --pccs-blue-green-grayish: #a2a2c8;
+  --pccs-cyan-grayish: #a2a2c8;
+  --pccs-blue-grayish: #a2a2c8;
+  --pccs-blue-purple-grayish: #c8a2a2;
+  --pccs-purple-grayish: #c8a2a2;
+
+
   --gray-10: #1a1a1a;
   --gray-20: #333333;
   --gray-30: #4d4d4d;
@@ -37,6 +179,19 @@
   --color-primary-hover: var(--gray-10);
   --color-error: var(--gray-10);
   --color-success : var(--gray-10);
+
+  --pccs-red: var(--pccs-red-soft);
+  --pccs-red-orange: var(--pccs-red-orange-soft);
+  --pccs-orange: var(--pccs-orange-soft);
+  --pccs-yellow-orange: var(--pccs-yellow-orange-soft);
+  --pccs-yellow: var(--pccs-yellow-soft);
+  --pccs-yellow-green: var(--pccs-yellow-green-soft);
+  --pccs-green: var(--pccs-green-soft);
+  --pccs-blue-green: var(--pccs-blue-green-soft);
+  --pccs-cyan: var(--pccs-cyan-soft);
+  --pccs-blue: var(--pccs-blue-soft);
+  --pccs-blue-purple: var(--pccs-blue-purple-soft);
+  --pccs-purple: var(--pccs-purple-soft);
 }
 
 @theme inline {
@@ -60,6 +215,19 @@
     --color-primary-hover: var(--gray-10);
     --color-error: var(--gray-10);
     --color-success : var(--gray-10);
+
+    --pccs-red: var(--pccs-red-deep);
+    --pccs-red-orange: var(--pccs-red-orange-deep);
+    --pccs-orange: var(--pccs-orange-deep);
+    --pccs-yellow-orange: var(--pccs-yellow-orange-deep);
+    --pccs-yellow: var(--pccs-yellow-deep);
+    --pccs-yellow-green: var(--pccs-yellow-green-deep);
+    --pccs-green: var(--pccs-green-deep);
+    --pccs-blue-green: var(--pccs-blue-green-deep);
+    --pccs-cyan: var(--pccs-cyan-deep);
+    --pccs-blue: var(--pccs-blue-deep);
+    --pccs-blue-purple: var(--pccs-blue-purple-deep);
+    --pccs-purple: var(--pccs-purple-deep);
   }
 }
 

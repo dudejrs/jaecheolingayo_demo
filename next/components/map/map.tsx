@@ -2,7 +2,7 @@
 
 import {useEffect, useState, useRef, useMemo} from 'react';
 import {Point, Ratio, Px} from './types';
-import {Path} from './geojson/types';
+import {Path, PathInformation} from './geojson/types';
 import {useGeoJson} from './geojson';
 import {usePan, useZoom, useViewbox} from "./hook"
 import {calculateStrokeWidth} from './util'
@@ -29,6 +29,7 @@ export interface MapProps extends StyleProps {
   className?: string
   ctprvnPathStyles?: StyleProps
   sigPathStyles?: StyleProps
+  styles? :  Record<string, StyleProps>
 } 
 
 const DEFAULT_ORIGIN_POINT : Point = new Point(650000, 1430000)
@@ -60,6 +61,28 @@ function ViewBox({base, ratio, width, height}: {base: Point, ratio: Ratio, width
 		)
 }
 
+function getNameProperties(properties : {[property: string] : string}) {
+	if (!properties) {
+		return "알수 없음";
+	}
+	if (Object.keys(properties).includes("ctp_kor_nm")){
+		return properties["ctp_kor_nm"]
+	}
+
+	if (Object.keys(properties).includes("full_nm")) {
+		return properties["full_nm"]
+	}
+	return "알수 없음"
+}
+
+function getStyles(name: string, styles: {[name: string]: StyleProps}) {
+	if (!name || !styles||  !Object.keys(styles).includes(name)) {
+		return {}
+	}
+
+	return styles[name]
+}
+
 export default function Map({
 	width = 600,
 	height = 600,
@@ -72,25 +95,23 @@ export default function Map({
 	ratio,
 	setRatio,
 	base,
-	setBase
+	setBase,
+	styles = {}
 } : MapProps & ViewBoxProps) {
 
 	const svgRef = useRef<SVGSVGElement | null>(null);
 	const {onMouseDown, onMouseMove, onMouseUp} = usePan(svgRef, ratio, base, setBase)
 	const {onDoubleClick, onWheel} = useZoom(svgRef,ratio, setRatio, base, setBase, 1.5)
 
-	const ctprvn_paths: Path[] = useGeoJson('/data/ctprvn_boundaries.json', DEFAULT_ORIGIN_POINT.x, DEFAULT_ORIGIN_POINT.y, DEFAULT_RATIO.width, DEFAULT_RATIO.height )
+	const ctprvn_paths: PathInformation[] = useGeoJson('/data/ctprvn_boundaries.json', DEFAULT_ORIGIN_POINT.x, DEFAULT_ORIGIN_POINT.y, DEFAULT_RATIO.width, DEFAULT_RATIO.height )
 	const [shouldLoadSigPaths, setShouldLoadSigPaths] = useState(false);
-	const sig_paths : Path[] = useGeoJson('/data/sig_boundaries.json', DEFAULT_ORIGIN_POINT.x, DEFAULT_ORIGIN_POINT.y, DEFAULT_RATIO.width, DEFAULT_RATIO.height, shouldLoadSigPaths)
+	const sig_paths : PathInformation[] = useGeoJson('/data/sig_boundaries.json', DEFAULT_ORIGIN_POINT.x, DEFAULT_ORIGIN_POINT.y, DEFAULT_RATIO.width, DEFAULT_RATIO.height, shouldLoadSigPaths)
 
 	useEffect(() => {
 		if (!shouldLoadSigPaths && ratio.min < DEFAULT_RATIO.min / 2) {
 			setShouldLoadSigPaths(true);
 		}
 	}, [ratio, shouldLoadSigPaths]);
-
-	useEffect(()=> {
-	},[shouldLoadSigPaths])
 
 	return (
 		<div>
@@ -110,29 +131,33 @@ export default function Map({
 					onWheel={onWheel}
 				>
 				<g id="ctprvn_regions">
-				  	{ctprvn_paths.map((d, idx) => (
+				  	{ctprvn_paths.map(({path: p, ...properties}, idx) => (
 				  		<path
 				  			key={idx}
-				  			d={d}
+				  			className={`${getNameProperties(properties)}`}
+				  			d={p}
 				  			{...ctprvnPathStyles}
 				  			strokeWidth={calculateStrokeWidth(ctprvnPathStyles.strokeWidth, new Ratio(width, height), ratio)}
 				  			style={{ cursor: 'pointer' }}
+				  			{...getStyles(getNameProperties(properties), styles)}
 				  			/>
 		  			))}
 				</g>
-				<g>
-				{
-					shouldLoadSigPaths && ratio.min < DEFAULT_RATIO.min / 2 && sig_paths.length > 0 && 
-						sig_paths.map((d, idx) => (
-							<path
-								key={`sig-${idx}`}
-								d={d}
-								{...sigPathStyles}
-								strokeWidth={calculateStrokeWidth(sigPathStyles.strokeWidth, new Ratio(width, height), ratio)}
-								style={{ cursor: 'pointer', fill: 'rgba(0,0,0,0)' }}
-							/>
-						))
-				}
+				<g id="sig_regions">
+					{
+						shouldLoadSigPaths && ratio.min < DEFAULT_RATIO.min / 2 && sig_paths.length > 0 && 
+							sig_paths.map(({path: p, ...properties}, idx) => (
+								<path
+									key={`sig-${idx}`}
+									className={`${getNameProperties(properties)}`}
+									d={p}
+									{...sigPathStyles}
+									strokeWidth={calculateStrokeWidth(sigPathStyles.strokeWidth, new Ratio(width, height), ratio)}
+									style={{ cursor: 'pointer'}}
+									{...getStyles(getNameProperties(properties), styles)}
+								/>
+							))
+					}
 				</g>	
 				{
 					children

@@ -37,8 +37,6 @@ function parseParams({x, y, width, height, k, tags} : Partial<{x: string, y: str
     throw Error("x, y, width, height, k 쿼리 파라미터가 필요합니다.")
   }
 
-  console.log(tags)
-
   return {
     x: parseFloat(x),
     y: parseFloat(y),
