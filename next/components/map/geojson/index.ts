@@ -27,9 +27,9 @@ export const GeometryToPaths= (geometry: Geometry, baseX: number, baseY: number,
 	return result
 }
 
-export function mapCoordianation(baseX: number, baseY: number, width: number, height : number )  {
-  return function ([x, y] : Path) {
-    return [x- baseX, baseY + height - y]
+export function mapCoordianation(baseX: number, baseY: number, width: number, height : number ) {
+  return function ([x, y] : Point) : Point {
+    return [x - baseX, baseY + height - y]
   }
 }
 

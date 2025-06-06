@@ -19,9 +19,9 @@ export default function usePan(svgRef: RefObject<SVGSVGElement | null>, ratio: R
     const delta = newPoint.minus(lastPoint.current);
 
     const realRatio = new Ratio(rect.width, rect.height);
-    const reflected = delta.xAxisReflected;
-    const newBase = reflected.convert(realRatio, ratio, base);
 
+    const inverted = delta.xAxisReflected
+    const newBase = inverted.convert(realRatio, ratio, base);
     setBase(newBase);
     lastPoint.current = newPoint;
   };

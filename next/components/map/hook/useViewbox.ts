@@ -6,8 +6,10 @@ export default function useViewBox(bound: Ratio, origin: Point, mid: Point, widt
 	const [base, setBase] = useState<Point>(ratio.originPointOf(mid)) 
 
   	function clampBaseToBounds(base: Point, ratio: Ratio): Point {
-  		const max = origin.plusRatio(bound).minusRatio(ratio)
-  		return base.clamped(origin, max)
+  		const min = origin.minusRatio(bound).plusRatio(ratio.half)
+  		const max = origin.plusRatio(bound).minusRatio(ratio.half)
+
+  		return base.clamped(min, max)
 	}
 
 	function safeSetBase(nextBase: Point) {

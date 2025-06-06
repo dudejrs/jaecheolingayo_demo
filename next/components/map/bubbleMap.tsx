@@ -60,10 +60,10 @@ export default function BubbleMap({
 	const font = useFont();
 	const mapCoords = useCallback(({x, y}: Coord)=>{
 		return {
-			x : x - base.x,
-			y : base.y + ratio.height - y
+			x : x - DEFAULT_ORIGIN_POINT.x,
+			y : DEFAULT_RATIO.height -  y + DEFAULT_ORIGIN_POINT.y
 		}
-	},[ratio, base])
+	},[])
 
 	useEffect(()=> {
 		const handler = setTimeout(()=> {
@@ -96,6 +96,7 @@ export default function BubbleMap({
 		return () => {
 			clearTimeout(handler)
 		}
+
 	},[ratio, base, tags])
 
 	return (

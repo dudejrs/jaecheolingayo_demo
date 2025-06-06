@@ -48,6 +48,18 @@ const DEFAULT_SIG_PATH_STYLES: StyleProps = {
 	strokeOpacity: "0.5"
 }
 
+function BasPoint({base, ratio, width, height} : {base: Point, ratio: Ratio, width: number, height: number}){
+	return (
+		<circle cx={base.x - DEFAULT_ORIGIN_POINT.x} cy={DEFAULT_RATIO.height - base.y + DEFAULT_ORIGIN_POINT.y} r={calculateStrokeWidth(30, new Ratio(width, height), ratio)} fill="yellow" />
+		)
+}
+
+function ViewBox({base, ratio, width, height}: {base: Point, ratio: Ratio, width: number, height: number}) {
+	return (
+		<rect width={ratio.width} height={ratio.height} x={base.x - DEFAULT_ORIGIN_POINT.x} y={DEFAULT_RATIO.height - base.y +DEFAULT_ORIGIN_POINT.y - ratio.height} strokeWidth={calculateStrokeWidth(10, new Ratio(width, height), ratio)} stroke="blue" fill="None"/>
+		)
+}
+
 export default function Map({
 	width = 600,
 	height = 600,
@@ -88,10 +100,8 @@ export default function Map({
 					fill={`${fill}`} 
 					width={width} 
 					height={height} 
-					// viewBox={`${base.x} ${base.y} ${ratio.width} ${ratio.height}`} 
-					viewBox={`${0} ${0} ${ratio.width} ${ratio.height}`} 
+					viewBox={`${base.x - DEFAULT_ORIGIN_POINT.x} ${DEFAULT_RATIO.height - base.y +DEFAULT_ORIGIN_POINT.y - ratio.height} ${ratio.width} ${ratio.height}`} 
 					xmlns="http://www.w3.org/2000/svg"
-					// style={{ transform: 'scaleY(-1)' }} 
 					onMouseDown={onMouseDown}
 					onMouseMove={onMouseMove}
 					onMouseUp={onMouseUp}

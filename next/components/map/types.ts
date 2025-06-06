@@ -44,16 +44,24 @@ export class Point{
 		return new Point(clampedX, clampedY);
 	}
 
-	convert(realRatio: Ratio, ratio: Ratio, base: Point ) {
-		const newX = (this.x / realRatio.width) * ratio.width + base.x;
+	convert(realRatio: Ratio, ratio: Ratio, base: Point) {
+		const newX = (this.x / realRatio.width) * ratio.width + base.x ;
 		const newY = (this.y / realRatio.height) * ratio.height + base.y
 
 		return new Point(newX, newY)
 	}
 
-	lerp(t: number, target: Point): Point {
-		
+	convert2(realRatio: Ratio, ratio: Ratio, base: Point) {
+		const newbaseX = base.x;
+		const newbaseY = base.y + ratio.height;
 
+		const newX = (this.x / realRatio.width) * ratio.width + newbaseX;
+		const newY = newbaseY - (this.y / realRatio.height) * ratio.height;
+
+		return new Point(newX, newY)
+	}
+
+	lerp(t: number, target: Point): Point {
 		const newX = lerpFunc(this.x, target.x, t)
 		const newY = lerpFunc(this.y, target.y, t)
 
@@ -67,9 +75,24 @@ export class Point{
 		return new Point(newX, newY);
 	}
 
+	get yAxisReflected() {
+		const newX = this.x
+		const newY = this.y
+
+		return new Point(newX, newY);
+	}
+
+	get originSymmetricPoint() {
+		const newX = - this.x 
+		const newY = - this.y 
+
+		return new Point(newX, newY)
+	}
+
 	get distanceFromOrigin() {
 		return Math.sqrt(this.x * this.x + this.y * this.y)
 	}
+
 }
 
 export class Ratio {
@@ -153,6 +176,13 @@ export class Ratio {
 
 	get k() {
 		return 720000 * 10 / this.min
+	}
+
+	get half() {
+		const newWidth = this.width / 2
+		const newHeight = this.height / 2 
+		
+		return new Ratio(newWidth, newHeight)
 	}
 }
 
