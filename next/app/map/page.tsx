@@ -1,9 +1,12 @@
 "use client"
 
+import {useState} from "react"
+
 import Markdown from '@/components/markdown';
-import {BubbleMap, Map} from "@/components/map"
+import {BubbleMap, Map, StyledMap} from "@/components/map"
 import NavLink from "@/components/navLink"
 import Button from "@/components/button"
+import Toggle from "@/components/toggle"
 
 import useRandomStyles from './randomStyles'
 
@@ -23,13 +26,21 @@ const content2 = `
 
 export default function MapPage() {
 	const {styles, setStyles} = useRandomStyles()
+	const [isOn, setIsOn] = useState<boolean>(false)
+
+
 
 	return (
 		<ul className="px-12">
 			<li className="flex flex-wrap pb-12 gap-4">
-				<Map width={600} height={600} className="bodred-1" styles={styles} />
+					{
+						isOn ? <StyledMap width={600} height={600} /> : <Map width={600} height={600} className="bodred-1" styles={styles} />
+					}
 				<Markdown content={content1}>
-					<Button className="w-50 h-16" value="색상 변경하기" onClick={() => setStyles()}/>
+					<Toggle callback={() => setIsOn(!isOn)}/>
+					{ 
+						<Button disabled={isOn ? true : false} className="w-50 h-16" value="색상 변경하기" onClick={() => setStyles()}/> 
+					}
 				</Markdown>
 			</li>
 			<li className="flex flex-wrap gap-4"> 

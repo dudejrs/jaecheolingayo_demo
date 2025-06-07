@@ -1,11 +1,12 @@
 'use client';
 
 import {useEffect, useState, useRef, useMemo} from 'react';
+import Map from "./map";
 import {Point, Ratio, Px} from './types';
 import {Path, PathInformation} from './geojson/types';
 import {useGeoJson} from './geojson';
 import {usePan, useZoom, useViewbox} from "./hook"
-import {calculateStrokeWidth} from './util'
+import {calculateStrokeWidth, calculateSize} from './util'
 
 
 export interface ViewBoxProps {
@@ -83,7 +84,7 @@ function getStyles(name: string, styles: {[name: string]: StyleProps}) {
 	return styles[name]
 }
 
-export default function Map({
+export default function StyledMap({
 	width = 600,
 	height = 600,
 	children,
@@ -92,14 +93,11 @@ export default function Map({
 	fill="",
 	ctprvnPathStyles=DEFAULT_CTPRVN_PATH_STYLES,
 	sigPathStyles=DEFAULT_SIG_PATH_STYLES,
-	ratio,
-	setRatio,
-	base,
-	setBase,
 	styles = {}
-} : MapProps & ViewBoxProps) {
+} : MapProps ) {
 
 	const svgRef = useRef<SVGSVGElement | null>(null);
+	const {ratio, setRatio, base, setBase} = useViewbox(DEFAULT_RATIO, DEFAULT_ORIGIN_POINT, DEFAULT_MID_POINT, width, height);
 	const {onMouseDown, onMouseMove, onMouseUp} = usePan(svgRef, ratio, base, setBase)
 	const {onDoubleClick, onWheel} = useZoom(svgRef,ratio, setRatio, base, setBase, 1.5)
 
@@ -130,16 +128,46 @@ export default function Map({
 					onDoubleClick={onDoubleClick}
 					onWheel={onWheel}
 				>
-				<g id="ctprvn_regions">
+				<defs>
+					<filter id="terrainTexture">
+					  <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise"/>
+					  <feDisplacementMap in="SourceGraphic" in2="noise" scale="150" xChannelSelector="R" yChannelSelector="G"/>
+					</filter>
+
+
+					<filter id="dropShadow">
+						<feDropShadow dx={calculateSize(1.5, new Ratio(width, height), ratio)} dy={calculateSize(1.5, new Ratio(width, height), ratio)} stdDeviation={calculateSize(3, new Ratio(width, height), ratio)} floodColor="gray" floodOpacity="0.125"/>
+					</filter>
+
+					<filter id="dropShadow2">
+						<feDropShadow dx={calculateSize(1.5, new Ratio(width, height), ratio)} dy={calculateSize(1.5, new Ratio(width, height), ratio)} stdDeviation={calculateSize(4.5, new Ratio(width, height), ratio)} floodColor="black" floodOpacity="0.5"/>
+					</filter>
+
+					<filter id="water-filter">
+				      <feTurbulence id="feTurb" type="fractalNoise" baseFrequency="0.0005 0.0005" seed="7" numOctaves="2" />
+				      <animate xlinkHref="#feTurb" attributeName="baseFrequency" dur="40s" keyTimes="0;0.5;1" values="0.00004 0.000075;0.000075 0.00004;0.00004 0.000075" repeatCount="indefinite"/>
+				      <feDisplacementMap id="feDisp" in="SourceGraphic" scale={calculateSize(33, new Ratio(width, height), ratio)} />
+				    </filter>
+
+					<pattern id="water" width={calculateSize(1000, new Ratio(width, height), ratio)} height={calculateSize(750, new Ratio(width, height), ratio)} patternUnits="userSpaceOnUse">
+						<image href="/water.jpg" width={calculateSize(1000, new Ratio(width, height), ratio)} height={calculateSize(750, new Ratio(width, height), ratio)} />
+					</pattern>
+				</defs>
+
+				<rect x={-DEFAULT_RATIO.width * 2} y={-DEFAULT_RATIO.height * 2} width={DEFAULT_RATIO.width * 4} height={DEFAULT_RATIO.height * 4} fill="url(#water)" filter="url(#water-filter)"/>
+
+				<g id="ctprvn_regions" filter="url(#dropShadow2)">
 				  	{ctprvn_paths.map(({path: p, ...properties}, idx) => (
 				  		<path
 				  			key={idx}
 				  			className={`${getNameProperties(properties)}`}
 				  			d={p}
 				  			{...ctprvnPathStyles}
-				  			strokeWidth={calculateStrokeWidth(ctprvnPathStyles.strokeWidth, new Ratio(width, height), ratio)}
+				  			strokeWidth={calculateStrokeWidth(0.2, new Ratio(width, height), ratio)}
 				  			style={{ cursor: 'pointer' }}
 				  			{...getStyles(getNameProperties(properties), styles)}
+				  			fill="rgba(255,255,255,1)"
+				  			filter="url(#dropShadow)"
 				  			/>
 		  			))}
 				</g>
@@ -152,7 +180,7 @@ export default function Map({
 									className={`${getNameProperties(properties)}`}
 									d={p}
 									{...sigPathStyles}
-									strokeWidth={calculateStrokeWidth(sigPathStyles.strokeWidth, new Ratio(width, height), ratio)}
+									strokeWidth={calculateStrokeWidth(0.3, new Ratio(width, height), ratio)}
 									style={{ cursor: 'pointer'}}
 									{...getStyles(getNameProperties(properties), styles)}
 								/>
