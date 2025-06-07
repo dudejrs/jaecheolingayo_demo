@@ -13,7 +13,7 @@ import useRandomStyles from './randomStyles'
 const content1 = `
 ##### **Type1** SVG 기반 컴포넌트   
 
-벡터 기반 XML 포맷을 이용한 SVG 기반으로 구현한 컴포넌트 입니다.
+벡터 기반 그래픽을 표현하는 XML 포맷인 SVG를 기반으로 구현한 지도 컴포넌트 입니다.
 
 ###### 이런게 장점이예요! 👍 
 	1. 브라우저에서 렌더링하기 때문에 확대 축소시에 자연스러워요.

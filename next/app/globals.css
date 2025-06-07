@@ -156,7 +156,6 @@
   --pccs-blue-purple-grayish: #c8a2a2;
   --pccs-purple-grayish: #c8a2a2;
 
-
   --gray-10: #1a1a1a;
   --gray-20: #333333;
   --gray-30: #4d4d4d;
@@ -167,7 +166,9 @@
   --gray-80: #cccccc;
   --gray-90: #e6e6e6;
 
-  --background: #f5f5f5; 
+  --custom-white: #f5f5f5;
+
+  --background: var(--custom-white); 
   --foreground: #171717;
   --color-background-alt: var(--gray-80);
   --color-text-primary : var(--gray-10);
