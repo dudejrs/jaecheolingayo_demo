@@ -7,7 +7,8 @@
 .markdown h2, 
 .markdown h3, 
 .markdown h4, 
-.markdown h5 {
+.markdown h5,
+.markdown h6 {
   font-weight:  bold;
 }
 
@@ -15,7 +16,8 @@
 .markdown h2 strong,
 .markdown h3 strong,
 .markdown h4 strong,
-.markdown h5 strong {
+.markdown h5 strong,
+.markdown h6 strong {
   background-color: var(--gray-50);
   color: var(--color-text-inversed);
   padding : 0.2rem 0.2rem;
