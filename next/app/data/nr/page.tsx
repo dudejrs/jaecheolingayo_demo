@@ -1,4 +1,5 @@
 'use client'
+
 import {useEffect, useRef} from "react"
 import {CardLink} from "@/components/card"
 import {PageWithDescription} from "../dataContext"

@@ -20,6 +20,15 @@ type Params = {
   tags? : number[]
 }
 
+type RawParams = {
+  x: string,
+  y: string,
+  width: string,
+  height: string,
+  k: string,
+  tags: string
+}
+
 function distance(p1: Coord, p2: Coord) {
   return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
 }
@@ -32,7 +41,7 @@ function parseNumberArray(tags?: string) {
   return tags.split(",").map(parseFloat)
 }
 
-function parseParams({x, y, width, height, k, tags} : Partial<{x: string, y: string, width: string, height: string, k: string, tags: string}>) : Params {
+function parseParams({x, y, width, height, k, tags} : Partial<RawParams>) : Params {
   if (!x || !y || !width || !height || !k) {
     throw Error("x, y, width, height, k 쿼리 파라미터가 필요합니다.")
   }
@@ -84,7 +93,7 @@ function updateCentroids(sellers: Seller[], clusters: number[], centroids: Coord
   }
 }
 
-function Kmeans(sellers: Seller[], k: number, iter: number, randomX: () => number, randomY : () => number ) {
+function kMeans(sellers: Seller[], k: number, iter: number, randomX: () => number, randomY : () => number ) {
   const clusters = Array.from(({length: sellers.length}), () => Math.floor(Math.random() * k))
   const centroids = Array.from({length: k}, () => {
     return {
@@ -113,7 +122,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   console.log(tags)
   const iter = 20
   const sellers = await getCoordsNear(x + width/2, y + height/2 , Math.min(width, height) * 0.8, tags)
-  const clusters = Kmeans(sellers, k, iter, 
+  const clusters = kMeans(sellers, k, iter, 
     () => x + Math.floor(Math.random() * width), 
     () => y + Math.floor(Math.random() * height)
   )

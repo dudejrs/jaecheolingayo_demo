@@ -5,6 +5,64 @@ const TABLE_NAME = "NR_seller"
 
 export const getSellerCount = getCount(TABLE_NAME);
 
+function toKoreanDate(date: Date) {
+	return date.toLocaleDateString('ko-KR', {
+		timeZone: 'Asia/Seoul',
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit'
+	});
+}
+
+function refineSeller(seller : Seller) {
+
+	return {
+		...seller,
+		registration_date : toKoreanDate(seller.registration_date),
+		last_sale_deadline_date : toKoreanDate(seller.last_sale_deadline_date),
+		tags : seller.tags.map(({name}) => name)
+	}
+}
+
+function refineSellers(sellers : Seller[]) {
+	return sellers.map(refineSeller)
+}
+
+export async function getSellers(take: number, skip: number, tagId? : number, keyword?: string) {
+	const dataSource = await getDataSource()
+	try {
+		if (!dataSource.isInitialized) {
+			await dataSource.initialize()
+		}
+		const sellerRepository = dataSource.getRepository(Seller)
+		const query = sellerRepository.createQueryBuilder('seller')
+			.leftJoinAndSelect('seller.tags', 'tag')
+			.take(take)
+			.skip(skip)
+
+		if (tagId) {
+			query.andWhere('tag.id = :tagId', {tagId})
+		}
+
+		if (keyword) {
+			query.andWhere('seller.business_name LIKE :keyword', {
+				keyword : `%${keyword}%`
+			})
+		}
+
+		const [sellers, totalCount] = await query.getManyAndCount();
+		return {
+			sellers : refineSellers(sellers),
+			totalCount 
+		}
+	} catch(error) {
+		console.error('Error fetching sellers: ', error);
+		throw error
+	}finally {
+		await dataSource.destroy();
+	}
+} 
+
 export async function getCoords(): Promise<Seller[]> {
 	const dataSource = await getDataSource()
 	try {

@@ -2,6 +2,7 @@
 
 import {useEffect, useState } from 'react';
 import {BubbleMap} from '@/components/map';
+import {PageWithDescription} from "@/app/data/dataContext"
 
 interface Tag {
   id: number
@@ -9,20 +10,10 @@ interface Tag {
 }
 
 export default function Page() {
-  const [sellerCount, setSellerCount] = useState<number|null>(null);
-  const [itemCount, setItemCount] = useState<number|null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
   useEffect(() => {
-    fetch('/api/seller/count')
-      .then(res => res.json())
-      .then(({count}) => setSellerCount(count))
-
-    fetch('/api/item/count')
-      .then(res => res.json())
-      .then(({count}) => setItemCount(count))
-
     fetch('/api/tag')
       .then(res => res.json())
       .then(r => {
@@ -37,8 +28,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex content-between relative content justify-end">
-      
+    <div className="flex content-between relative content justify-end"> 
       <div className="flex flex-wrap gap-2 absolute bottom-10 left-12 h-75 w-75" >
         {
           tags.map((tag, i) => 

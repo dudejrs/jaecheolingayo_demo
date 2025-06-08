@@ -208,7 +208,7 @@
     --foreground: #ededed;
     --color-background-alt: var(--gray-20);
     --color-text-primary : var(--gray-10);
-    --color-text-secondary: var(--gray-90);
+    --color-text-secondary: var(--gray-80);
     --color-text-inversed: var(--background);
     --color-border: var(--gray-70);
     --color-border-focus: var(--gray-10);
