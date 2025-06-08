@@ -1,5 +1,5 @@
 'use client'
-
+import {Suspense} from "react"
 import {useEffect, useState} from "react"
 import Breadcrumb from "@/components/breadcrumb"
 import {DescriptionContext, DashboardContext} from "./dataContext"
@@ -23,6 +23,7 @@ export default function Layout({children}: Readonly<{children :React.ReactNode;
 
 
 	return (
+		<Suspense fallback={<div>로딩 중...</div>}>
 			<DescriptionContext.Provider value={{description, setDescription}}>
 				<DashboardContext.Provider value={{dashboard, setDashboard}}>
 					<div>
@@ -39,5 +40,6 @@ export default function Layout({children}: Readonly<{children :React.ReactNode;
 					</div>
 				</DashboardContext.Provider>
 			</DescriptionContext.Provider>
+		</Suspense >
 		)
 }
