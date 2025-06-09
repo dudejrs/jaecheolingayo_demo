@@ -17,13 +17,20 @@ export type Coord = {
 	y: number
 }
 
+export type Data = {
+	count : number,
+	sellers : number[]
+}
+
 export type Cluster = {
 	coord: Coord
 	data?: number
+	sellers: number[]
 }
 
 export interface BubbleProps {
 	markerStyle?: StyleProps
+	onMarkerClick?: (x: number, y: number, sellers: number[]) => () => void
 	tags?: number[]
 }
 
@@ -50,6 +57,7 @@ export default function BubbleMap({
 	width = 600,
 	height = 600,
 	markerStyle = DEFAULT_MARKER_STYLE,
+	onMarkerClick= (x: number, y: number, sellers: number[]) => () => {},
 	tags,
 	...props
 }: MapProps & BubbleProps) {
@@ -81,6 +89,10 @@ export default function BubbleMap({
 
 			fetch(`/api/seller/kmeans?${params.toString()}`)
 				.then(res => res.json())
+				.then(r => {
+					console.log(r)
+					return r
+				})
 				.then(({clusters} : {clusters : Cluster[]})=> clusters)
 				.then(c => {
 					if (!totalClusters.current){
@@ -103,7 +115,7 @@ export default function BubbleMap({
 		<Map width={width} height={height} ratio={ratio} setRatio={setRatio} base={base} setBase={setBase} {...props}>
 			<g>
 				{
-					font && clusters.map(({coord, data}, i) => (<Marker key={i} coord={mapCoords(coord)} font={font} data={data} size={calculateSize(calculateMarkerSize(data, totalClusters.current), new Ratio(width, height), ratio)} {...markerStyle}/>))
+					font && clusters.map(({coord, data, sellers}, i) => (<Marker key={i} sellers={sellers} coord={mapCoords(coord)} font={font} data={data} size={calculateSize(calculateMarkerSize(data, totalClusters.current), new Ratio(width, height), ratio)} {...markerStyle} onClick={onMarkerClick && onMarkerClick(coord.x, coord.y, sellers)} />))
 				}
 			</g>
 		</Map>

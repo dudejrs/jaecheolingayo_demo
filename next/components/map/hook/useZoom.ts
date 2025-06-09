@@ -34,9 +34,9 @@ export default function  useZoom (
     const clientPoint = new Point(event.clientX, event.clientY);
     const relative = clientPoint.minus(new Point(rect.left, rect.top));
     const realRatio = new Ratio(rect.width, rect.height);
-    // const midPoint = relative.convert(realRatio, ratio, base);
+
     const midPoint = relative.convert2(realRatio, ratio, base);
-    console.log(midPoint)
+
     zoom(midPoint, ZOOM_DIRECTION.IN, zoomFactor);
   };
 

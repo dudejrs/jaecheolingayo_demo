@@ -1,3 +1,4 @@
+import {In} from "typeorm"
 import {getConnection, getCount, getDataSource} from "./index"
 import {Seller} from "./entities"
 
@@ -125,3 +126,31 @@ export async function getCoordsNear(x: number, y: number, r: number, tags?: numb
 		await dataSource.destroy()
 	}
 }
+
+export async function getSellersbyIds(ids: number[])  {
+	const dataSource = await getDataSource();
+
+	try {
+		if (!dataSource.isInitialized) {
+			await dataSource.initialize()
+		}
+
+		const sellerRepository = dataSource.getRepository(Seller);
+
+		const sellers = await sellerRepository.find({
+			where: {
+		      id: In(ids),
+		    },
+		})
+
+		return sellers;
+
+	} catch(error) {
+		console.error("Error fetching sellers: ", error);
+		throw error
+	
+	} finally {
+		await dataSource.destroy();
+	}
+}
+

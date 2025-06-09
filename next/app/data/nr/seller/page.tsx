@@ -3,9 +3,8 @@
 import {useState, useEffect} from "react"
 import {useSearchParams, useRouter} from "next/navigation"
 import {PageWithDescription} from "@/app/data/dataContext"
-
 import Form from "./form"
-import Pagination from "./pagination"
+import Pagination from "@/components/pagination"
 
 
 interface Seller {
@@ -112,7 +111,7 @@ export default function SellerPage() {
                         }
                       </tbody>
                   </table>
-                  <Pagination totalPages={totalPages} currentPage={page} updateSearchParams={updateSearchParams}/>
+                  <Pagination totalPages={totalPages} currentPage={page} onClick={updateSearchParams}/>
                 </>
               )
           }

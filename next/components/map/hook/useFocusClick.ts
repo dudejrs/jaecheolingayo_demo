@@ -1,7 +1,8 @@
 import { RefObject } from 'react';
 import {Point, Ratio} from "../types"
 
-export default function useFocus(svgRef: RefObject<SVGSVGElement | null>, ratio: Ratio, base: Point, setBase: (p: Point) => void) {
+export default function useFocusClick(svgRef: RefObject<SVGSVGElement | null>, ratio: Ratio, setRatio: (r: Ratio) => void, base: Point, setBase: (p: Point) => void, duration: number = 1000) {
+
 	const onClick = (e: React.MouseEvent<SVGSVGElement>) => {
 		if (!svgRef.current) return
 
@@ -18,5 +19,5 @@ export default function useFocus(svgRef: RefObject<SVGSVGElement | null>, ratio:
   	setBase(newBasePoint)
 	}
 
-	return { onClick };
+	return { onClick};
 }

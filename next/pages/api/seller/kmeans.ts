@@ -111,7 +111,8 @@ function kMeans(sellers: Seller[], k: number, iter: number, randomX: () => numbe
   .map((coord, i)=> {
     return {
     coord: coord,
-    data: clusters.reduce((count, nearest_centroid) => nearest_centroid === i ? count + 1 : count, 0)
+    data: clusters.reduce((count, nearest_centroid) => nearest_centroid === i ? count + 1 : count, 0),
+    sellers: clusters.reduce((acc, nearest_centroid, j) => nearest_centroid === i ? [...acc, sellers[j].id] : acc, [] as number[]),
     }
   })
   .filter(({data})=> data > 0);
@@ -119,7 +120,6 @@ function kMeans(sellers: Seller[], k: number, iter: number, randomX: () => numbe
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {x, y, width, height, k, tags} = parseParams(req.query)
-  console.log(tags)
   const iter = 20
   const sellers = await getCoordsNear(x + width/2, y + height/2 , Math.min(width, height) * 0.8, tags)
   const clusters = kMeans(sellers, k, iter, 

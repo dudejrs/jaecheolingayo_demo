@@ -19,5 +19,5 @@ export default function DefaultMap({
 }: MapProps){
 	const {ratio, setRatio, base, setBase} = useViewbox(DEFAULT_RATIO, DEFAULT_ORIGIN_POINT, DEFAULT_MID_POINT, width, height);
 
-	return (<Map ratio={ratio} setRatio={setRatio} base={base} setBase={setBase} {...props} />)
+	return (<Map width={width} height={height} ratio={ratio} setRatio={setRatio} base={base} setBase={setBase} {...props} />)
 }
