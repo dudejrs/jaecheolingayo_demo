@@ -53,6 +53,26 @@ function calculateMarkerSize(
 	return size
 }
 
+function arrayEqual<T>(a1: T[], a2: T[]) {
+	if (a1 == a2) {
+		return true; 
+	}
+
+	if (a1.length !== a2.length) {
+		return false;
+	}
+
+	const arr1 = a1.slice().sort();
+	const arr2 = a2.slice().sort()
+
+	for (let i = 0; i < a1.length; i++) {
+		if (arr1[i] !== arr2[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
 export default function BubbleMap({
 	width = 600,
 	height = 600,
@@ -66,6 +86,7 @@ export default function BubbleMap({
 	const totalClusters = useRef<number>(0)
 	const prevBase = useRef<Point>(null);
 	const prevRatio = useRef<Ratio>(null);
+	const prevTags = useRef<number[]|null|undefined>(tags);
 	const POINT_THRESHOLD = 0.3
 	const RATIO_THRESHOLD = 0.05
 
@@ -77,14 +98,21 @@ export default function BubbleMap({
 		}
 	},[])
 
-	const doFetch = useCallback((base: Point, ratio: Ratio, tagsStr?: string) => {
-			if (prevRatio.current && prevBase.current && prevBase.current.distance(base) / prevRatio.current.min < POINT_THRESHOLD && prevRatio.current.d(ratio) < RATIO_THRESHOLD ) {
-				console.log(prevRatio, prevBase)
+// 
+// T T -> return
+// T F  -> fetch 
+// F T -> fetch
+// F F -> fecth
+
+	const doFetch = useCallback((base: Point, ratio: Ratio, tags?: number[]) => {
+			if (prevTags.current && tags && arrayEqual(prevTags.current, tags) && prevRatio.current && prevBase.current && prevBase.current.distance(base) / prevRatio.current.min < POINT_THRESHOLD && prevRatio.current.d(ratio) < RATIO_THRESHOLD ) {
+				console. log ( tags && arrayEqual(prevTags.current, tags))
 				return;
 			}
 
 			prevBase.current = base
 			prevRatio.current = ratio
+			prevTags.current = tags
 
 			const params = new URLSearchParams({
 				x: base.x.toString(),
@@ -94,8 +122,8 @@ export default function BubbleMap({
 				k : ratio.k.toString(),
 			});
 			
-			if (tagsStr) {
-				params.set("tagsStr", tagsStr)
+			if (tags) {
+				params.set("tags", tags.toString())
 			}
 
 			fetch(`/api/seller/kmeans?${params.toString()}`)
@@ -114,7 +142,7 @@ export default function BubbleMap({
 
 	useEffect(()=> {
 		console.log("useEffect")
-		debouncedFetch(base, ratio, tags?.toString());
+		debouncedFetch(base, ratio, tags);
 	},[ratio, base, tags, debouncedFetch])
 
 	return (
