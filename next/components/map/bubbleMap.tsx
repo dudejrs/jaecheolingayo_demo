@@ -4,7 +4,7 @@ import {Point, Ratio} from './types'
 import Map from "./map";
 import {useViewbox} from './hook';
 import {StyleProps, MapProps} from "./map";
-import {useFont} from './hook'
+import {useFont, useDebounce} from './hook'
 import Marker from "./marker";
 import {calculateSize} from "./util";
 
@@ -64,6 +64,10 @@ export default function BubbleMap({
 	const {ratio, setRatio, base, setBase} = useViewbox(DEFAULT_RATIO, DEFAULT_ORIGIN_POINT, DEFAULT_MID_POINT, width, height)
 	const [clusters, setClusters] = useState<Cluster[]>([])
 	const totalClusters = useRef<number>(0)
+	const prevBase = useRef<Point>(null);
+	const prevRatio = useRef<Ratio>(null);
+	const POINT_THRESHOLD = 0.3
+	const RATIO_THRESHOLD = 0.05
 
 	const font = useFont();
 	const mapCoords = useCallback(({x, y}: Coord)=>{
@@ -73,8 +77,14 @@ export default function BubbleMap({
 		}
 	},[])
 
-	useEffect(()=> {
-		const handler = setTimeout(()=> {
+	const doFetch = useCallback((base: Point, ratio: Ratio, tagsStr?: string) => {
+			if (prevRatio.current && prevBase.current && prevBase.current.distance(base) / prevRatio.current.min < POINT_THRESHOLD && prevRatio.current.d(ratio) < RATIO_THRESHOLD ) {
+				console.log(prevRatio, prevBase)
+				return;
+			}
+
+			prevBase.current = base
+			prevRatio.current = ratio
 
 			const params = new URLSearchParams({
 				x: base.x.toString(),
@@ -83,16 +93,13 @@ export default function BubbleMap({
 				height: ratio.height.toString(),
 				k : ratio.k.toString(),
 			});
-			if (tags) {
-				params.set("tags", tags.toString())
+			
+			if (tagsStr) {
+				params.set("tagsStr", tagsStr)
 			}
 
 			fetch(`/api/seller/kmeans?${params.toString()}`)
 				.then(res => res.json())
-				.then(r => {
-					console.log(r)
-					return r
-				})
 				.then(({clusters} : {clusters : Cluster[]})=> clusters)
 				.then(c => {
 					if (!totalClusters.current){
@@ -101,21 +108,28 @@ export default function BubbleMap({
 					}
 					setClusters(c)
 				})
-		}, 500);
+	}, []) 
 
+	const debouncedFetch = useDebounce(doFetch, 100);
 
-
-		return () => {
-			clearTimeout(handler)
-		}
-
-	},[ratio, base, tags])
+	useEffect(()=> {
+		console.log("useEffect")
+		debouncedFetch(base, ratio, tags?.toString());
+	},[ratio, base, tags, debouncedFetch])
 
 	return (
 		<Map width={width} height={height} ratio={ratio} setRatio={setRatio} base={base} setBase={setBase} {...props}>
 			<g>
 				{
-					font && clusters.map(({coord, data, sellers}, i) => (<Marker key={i} sellers={sellers} coord={mapCoords(coord)} font={font} data={data} size={calculateSize(calculateMarkerSize(data, totalClusters.current), new Ratio(width, height), ratio)} {...markerStyle} onClick={onMarkerClick && onMarkerClick(coord.x, coord.y, sellers)} />))
+					font && clusters.map(
+						({coord, data, sellers}, i) => 
+						(<Marker key={i} sellers={sellers} 
+							coord={mapCoords(coord)} 
+							font={font} 
+							data={data} 
+							size={calculateSize(calculateMarkerSize(data, totalClusters.current), new Ratio(width, height), ratio)} 
+							{...markerStyle} 
+							onClick={onMarkerClick && onMarkerClick(coord.x, coord.y, sellers)} />))
 				}
 			</g>
 		</Map>

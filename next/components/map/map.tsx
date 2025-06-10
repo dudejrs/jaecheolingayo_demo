@@ -7,7 +7,6 @@ import {useGeoJson} from './geojson';
 import {usePan, useZoom, useViewbox} from "./hook"
 import {calculateStrokeWidth} from './util'
 
-
 export interface ViewBoxProps {
 	base: Point
 	setBase: (b: Point) => void

@@ -5,3 +5,4 @@ export {default as useFocusHover} from './useFocusHover'
 export {default as useFocusClick} from './useFocusClick'
 export {default as useViewbox} from "./useViewbox"
 export {default as useFont} from "./useFont"
+export {default as useDebounce} from "./useDebounce"

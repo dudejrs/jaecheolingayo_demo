@@ -68,6 +68,13 @@ export class Point{
 		return new Point(newX, newY)
 	}
 
+	distance(other: Point) {
+		const dx = this.x - other.x
+		const dy = this.y - other.y
+
+		return Math.sqrt(dx * dx + dy * dy)
+	}
+
 	get xAxisReflected() {
 		const newX = - this.x
 		const newY = this.y
@@ -170,6 +177,10 @@ export class Ratio {
 		return new Ratio(newWidth, newHeight)
 	}
 
+	d(other: Ratio) {
+		return Math.abs((this.diagonal - other.diagonal) / this.diagonal)
+	}
+
 	get min() {
 		return this.width < this.height ? this.width : this.height
 	}
@@ -183,6 +194,10 @@ export class Ratio {
 		const newHeight = this.height / 2 
 		
 		return new Ratio(newWidth, newHeight)
+	}
+
+	get diagonal() {
+		return Math.sqrt(this.width * this.width + this.height * this.height )
 	}
 }
 
