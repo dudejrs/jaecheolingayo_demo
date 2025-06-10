@@ -1,12 +1,12 @@
 'use client';
 
 import {useEffect, useState, useRef, useMemo} from 'react';
-import Map from "./map";
-import {Point, Ratio, Px} from './types';
-import {Path, PathInformation} from './geojson/types';
-import {useGeoJson} from './geojson';
-import {usePan, useZoom, useViewbox} from "./hook"
-import {calculateStrokeWidth, calculateSize} from './util'
+import Map from "../map";
+import {Point, Ratio, Px} from '../types';
+import {Path, PathInformation} from '../geojson/types';
+import {useGeoJson} from '../geojson';
+import {usePan, useZoom, useViewbox} from "../hook"
+import {calculateStrokeWidth, calculateSize} from '../util'
 
 
 export interface ViewBoxProps {

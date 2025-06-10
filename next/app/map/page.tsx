@@ -1,9 +1,11 @@
 "use client"
 
 import {useState} from "react"
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
 
 import Markdown from '@/components/markdown';
-import {BubbleMap, Map, StyledMap} from "@/components/map"
+import {BubbleMap, Map} from "@/components/map"
+import {WaterTextureMap, WaterColorMap} from "@/components/map/style"
 import NavLink from "@/components/navLink"
 import Button from "@/components/button"
 import Toggle from "@/components/toggle"
@@ -42,25 +44,40 @@ export default function MapPage() {
 	return (
 		<ul className="px-12">
 			<li className="flex flex-wrap pb-12 gap-4 relative">
-					{
-						isOn ? <StyledMap width={600} height={600} /> : <Map width={600} height={600} className="bodred-1" styles={styles}> </Map>
-					}
+				<TabGroup className="flex flex-wrap">
+					<TabPanels>
+						<TabPanel>
+							<Map width={600} height={600} className="bodred-1" styles={styles}> </Map>
+							<Button disabled={isOn ? true : false} className="absolute top-20 left-60 w-30 h-10 drop-shadow-md" value="색상 변경하기" onClick={() => setStyles()}/> 
+						</TabPanel>
+						<TabPanel>
+							<WaterTextureMap width={600} height={600} />
+						</TabPanel>
+						<TabPanel>
+							<WaterColorMap width={600} height={600}/>
+						</TabPanel>
+					</TabPanels>
 				<Markdown content={content1} className="pl-4 flex flex-col justify-between">
-					<div className="font-bold" >SVG 컴포넌트의 다양한 효과를 시험해 보세요.</div>
+					<div className="font-bold" >밑에 버튼으로 SVG 컴포넌트 스타일을 변경해 보세요! </div>
 					<div className="w-full flex flex-col justify-center items-center">
 						<div className="flex w-full gap-4 items-center">
 							<h6>지도 스타일 변경하기: </h6>
-							<Toggle className="text-xs drop-shadow-md" callback={() => setIsOn(!isOn)}/>
+							<TabList className="inline-flex gap-2">
+								<Tab className="cursor-pointer px-2 py-1 rounded-full transition duration-300 data-selected:bg-green-500 data-selected:text-white">기본</Tab>
+								<Tab className="cursor-pointer px-2 py-1 rounded-full transition duration-300 data-selected:bg-green-500 data-selected:text-white">바다</Tab>
+								<Tab className="cursor-pointer px-2 py-1 rounded-full transition duration-300 data-selected:bg-green-500 data-selected:text-white">수채화</Tab>
+							</TabList>
 						</div>
-						{ 
-							!isOn  && <Button disabled={isOn ? true : false} className="absolute top-20 left-60 w-30 h-10 drop-shadow-md" value="색상 변경하기" onClick={() => setStyles()}/> 
-						}
 					</div>
 				</Markdown>
+				</TabGroup>
 			</li>
 			<li className="flex flex-wrap gap-4"> 
 				<div className="w-150 h-150 border-1"> </div>
 				<Markdown content={content2} />
+			</li>
+			<li>
+				
 			</li>
 		</ul>
 		);
