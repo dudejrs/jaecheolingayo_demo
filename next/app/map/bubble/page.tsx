@@ -2,7 +2,7 @@
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
 
 import ReactMarkdown from 'react-markdown';
-import {BubbleMap, Map} from "@/components/map"
+import BubbleMap from "./bubbleMap"
 
 export default function MapPage() {
 
@@ -10,7 +10,7 @@ export default function MapPage() {
 		<TabGroup className="w-full flex flex-col justify-center">
 			<TabPanels>
 				<TabPanel>
-					<BubbleMap width={600} height={600} className="bodred-1 w-full flex flex-col justify-center" />
+					<BubbleMap />
 					<ReactMarkdown>
 					</ReactMarkdown>
 				</TabPanel>

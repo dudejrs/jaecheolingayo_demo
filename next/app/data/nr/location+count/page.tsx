@@ -2,7 +2,7 @@
 
 import {useEffect, useState, useCallback} from 'react';
 import {useRouter} from "next/navigation";
-import {BubbleMap} from '@/components/map';
+import BubbleMap from "./bubbleMap";
 import {PageWithDescription} from "@/app/data/dataContext"
 
 interface Tag {

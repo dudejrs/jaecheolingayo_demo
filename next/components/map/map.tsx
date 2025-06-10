@@ -137,7 +137,7 @@ export default function Map({
 				  			d={p}
 				  			{...ctprvnPathStyles}
 				  			strokeWidth={calculateStrokeWidth(ctprvnPathStyles.strokeWidth, new Ratio(width, height), ratio)}
-				  			style={{ cursor: 'pointer' }}
+				  			style={{ cursor: 'grab' }}
 				  			{...getStyles(getNameProperties(properties), styles)}
 				  			/>
 		  			))}
@@ -152,7 +152,7 @@ export default function Map({
 									d={p}
 									{...sigPathStyles}
 									strokeWidth={calculateStrokeWidth(sigPathStyles.strokeWidth, new Ratio(width, height), ratio)}
-									style={{ cursor: 'pointer'}}
+									style={{ cursor: 'grab'}}
 									{...getStyles(getNameProperties(properties), styles)}
 								/>
 							))
