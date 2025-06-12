@@ -12,17 +12,19 @@ export default function  useZoom (
   ratio: Ratio, 
   setRatio: (r: Ratio) => void, 
   base: Point, setBase: (p: Point) => void, 
-  zoomFactor:number = DEFAULT_ZOOM_FACTOR
+  zoomFactor:number = DEFAULT_ZOOM_FACTOR,
+  minimumRatio: Ratio = Ratio.MINIMUM
 ) {
-
 	const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
 	const isWheelEnabled = useRef(true);
-
+  const oirginalPoint = useRef<Point>(base);
+  const originaRatio = useRef<Ratio>(ratio);
+  
   const zoom = (midPoint: Point, direction: ZOOM_DIRECTION, zoomFactor: number) => {
     if (!svgRef.current) return
 
     const factor = direction === ZOOM_DIRECTION.IN ? 1 / zoomFactor : zoomFactor;
-    const newRatio = ratio.scale(factor);
+    const newRatio = ratio.scale(factor, originaRatio.current);
     const newBase = newRatio.originPointOf(midPoint);
     setBase(newBase);
     setRatio(newRatio);

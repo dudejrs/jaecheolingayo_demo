@@ -104,7 +104,8 @@ export class Point{
 
 export class Ratio {
 	static MAXIMUM = new Ratio(720000, 720000)
-	static MINIMUM = new Ratio(50000, 50000)
+	static MINIMUM = new Ratio(10000, 10000)
+	// static MINIMUM = new Ratio(50000, 50000)
 
 	readonly width:  number;
 	readonly height:  number;
@@ -147,17 +148,17 @@ export class Ratio {
 		return new Point(newX, newY)
 	}
 
-	scale(r: number) : Ratio {
+	scale(r: number, maximum: Ratio = Ratio.MAXIMUM, minimum: Ratio = Ratio.MINIMUM ) : Ratio {
 		const newWidth = this.width * r
 		const newHeight = this.height * r
 
 		const clampedWidth = Math.min(
-		Math.max(newWidth, Ratio.MINIMUM.width),
-			Ratio.MAXIMUM.width
+		Math.max(newWidth, minimum.width),
+			maximum.width
 		);
 		const clampedHeight = Math.min(
-			Math.max(newHeight, Ratio.MINIMUM.height),
-			Ratio.MAXIMUM.height
+			Math.max(newHeight, minimum.height),
+			maximum.height
 		);
 
 		const originalAspect = this.width / this.height;
