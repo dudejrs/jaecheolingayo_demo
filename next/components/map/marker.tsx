@@ -1,4 +1,5 @@
 'use client';
+
 import type {Coord} from "./bubbleMap"
 import {StyleProps} from "./map";
 import Text from "./text"
@@ -12,7 +13,7 @@ export interface MarkerProps<T> {
 	onClick? : () => void
 	fontSize?: number
 	data?: T
-	dataToString : (data: T) => string
+	dataToString?: (data: T) => string
 }
 
 export default function Marker<T>({
@@ -30,7 +31,7 @@ export default function Marker<T>({
 		<g>
 			<circle cx={coord.x} cy={coord.y} r={size} className={className} {...kwargs} cursor={ onClick ? "pointer" : ""} onClick={onClick || undefined}/>
 				{
-					data && (<Text text={dataToString(data)} font={font} size={size} x={coord.x} y={coord.y} stroke="blue" fill="white"/>)
+					typeof window !== 'undefined' && font && data && dataToString && (<Text text={dataToString(data)} font={font} size={size} x={coord.x} y={coord.y} stroke="blue" fill="white"/>)
 				}
 		</g>
 		)

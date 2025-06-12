@@ -5,7 +5,6 @@ import Map from "./map";
 import {useViewbox} from './hook';
 import {StyleProps, MapProps} from "./map";
 import {useDebounce} from './hook'
-import Marker from "./marker";
 import {calculateSize} from "./util";
 
 const DEFAULT_ORIGIN_POINT : Point = new Point(650000, 1430000)

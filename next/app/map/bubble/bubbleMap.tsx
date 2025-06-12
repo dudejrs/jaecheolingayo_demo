@@ -13,26 +13,26 @@ const DEFAULT_ORIGIN_POINT : Point = new Point(650000, 1430000)
 const DEFAULT_RATIO : Ratio = new Ratio(720000, 720000)
 const DEFAULT_MID_POINT : Point = DEFAULT_ORIGIN_POINT.midPointOf(DEFAULT_RATIO)
 
-interface Coord {
+interface RawPoint {
 	x: number 
 	y: number
 }
 
-interface Ratio_ {
+interface RawRatio {
 	width: number
 	height: number
 }
 
 interface Data {
-	coord: Coord 
+	coord: RawPoint 
 	data : number
 }
 
 interface BubbleMapProps {
 	width?: number 
 	height?: number
-	base: Coord
-	ratio: Ratio_
+	base: RawPoint
+	ratio: RawRatio
 	className?: string
 	data : Data[]
 	calculateFunc:  (v: number[]) => number
@@ -125,7 +125,7 @@ export default function TestBubbleMap({
 		}))
 	}, [data, calculateFunc_, kOrigin, data, n])
 
-	const mapCoords = useCallback(({x, y}: Coord)=>{
+	const mapCoords = useCallback(({x, y}: RawPoint)=>{
 		return {
 			x : x - DEFAULT_ORIGIN_POINT.x,
 			y : DEFAULT_RATIO.height -  y + DEFAULT_ORIGIN_POINT.y
@@ -139,6 +139,7 @@ export default function TestBubbleMap({
 			data={data}
 			size={calculateSize(calculateMarkerSize(data.value, totalClusters.current, 12, 40), new Ratio(width, height), ratio)} 
 			dataToString={data => data.value.toString()}
+			fill="var(--pccs-blue-bright)"
 			/>
 	)
 

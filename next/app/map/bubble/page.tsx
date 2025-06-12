@@ -7,11 +7,12 @@ import {Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessu
 import StepperInput from "@/components/stepperInput"
 import Markdown from '@/components/markdown';
 import BubbleMap from "./bubbleMap"
+import ScatterMap from "./scatterMap"
 
 const content =`
 #### K-Means 버블맵 
 
-##### K-Means 알고리즘은 K개의 군집화를 기반으로 한 알고리즘입니다. 
+##### K-Means 알고리즘 
 K-Means 알고리즘의 흐름은 다음과 같습니다. 
 	1. 처음에 랜덤한 K개의 점을 군집의 초기 중심점으로 지정합니다. 
 	2. 각 점들은 자신과 가장 가까운 군집의 중심점을 자신의 군집으로 정합니다.
@@ -166,14 +167,13 @@ const calculationFunctions = [
 	{name : "갯수", f : calculateCount},
 ]
 
-
 export default function MapPage() {
 	const [type, setType] = useState<CoordType>("UTM-K");
 	const [calculateFunc, setCalculateFunc] = useState(calculationFunctions[0])
 	const [K, setK] = useState(5);
 	const [N, setN] = useState(20);
 	const [M, setM] = useState(100);
-	const [data, setData] = useState<Data<Coord> []>(generateRandomData(M));
+	const [data, setData] = useState<Data<Coord> []>([]);
 
 	const handleChange= useCallback((i : number)=> {
 		if (i === 0) {
@@ -196,6 +196,11 @@ export default function MapPage() {
 			<div className="w-150 flex flex-col gap-4">
 				<TabPanels className="relative">
 					<TabPanel>
+						<ScatterMap base={latLngToUTMK(seoulBBox.min)} ratio={calculateRatioFromLatLng(seoulBBox.min, seoulBBox.max)} 
+							data={data as Data<UTMKPoint>[]}
+						/>
+					</TabPanel>
+					<TabPanel>
 						<BubbleMap 
 							base={latLngToUTMK(seoulBBox.min)} ratio={calculateRatioFromLatLng(seoulBBox.min, seoulBBox.max)} 
 							data={data as Data<UTMKPoint>[] } calculateFunc={calculateFunc.f} 
@@ -205,8 +210,9 @@ export default function MapPage() {
 						/>
 					</TabPanel>
 					<TabPanel>
-
+						<div className="w-150 h-150"/>
 					</TabPanel>
+
 					<div className="absolute bottom-4 right-4 p-4 rounded-lg bg-[var(--color-background)]/50">
 						<div className="flex w-45 justify-between items-center">
 							<div className="font-bold">K</div>
