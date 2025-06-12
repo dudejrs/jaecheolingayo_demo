@@ -3,6 +3,7 @@
 import {useRef, useEffect, useCallback} from "react"
 
 import {BubbleMap} from "@/components/map"
+import type {Cluster} from "@/components/map/bubbleMap"
 import {Point, Ratio} from '@/components/map/types'
 import {useFont, useDebounce} from '@/components/map/hook'
 import Marker from "@/components/map/marker";
@@ -13,9 +14,8 @@ const DEFAULT_ORIGIN_POINT : Point = new Point(650000, 1430000)
 const DEFAULT_RATIO : Ratio = new Ratio(720000, 720000)
 const DEFAULT_MID_POINT : Point = DEFAULT_ORIGIN_POINT.midPointOf(DEFAULT_RATIO)
 
-
 type Coord = {
-	x: number,
+	x: number
 	y: number
 }
 
@@ -23,18 +23,18 @@ interface BubbleMapProps {
 	width: number
 	height: number
 	tags: number[] | null
-	onMarkerClick: (x: number, y: number, sellers: number[]) => () => void
+	onMarkerClick: (x: number, y: number, members: number[]) => () => void
 }
 
-type Data =  {
-		count: number 
-		sellers: number[]	
-}
+// type Data =  {
+// 		value: number 
+// 		members?: number[]	
+// }
 
-type Cluster = {
-	coord: Coord
-	data: Data
-}
+// type Cluster = {
+// 	coord: Coord
+// 	data: Data
+// }
 
 const DEFAULT_MARKER_STYLE : StyleProps = {
 	fill: "var(--gray-50)"
@@ -114,11 +114,16 @@ export default function NRBubbleMap({
 
 		return fetch(`/api/seller/kmeans?${params.toString()}`)
 			.then(res => res.json())
-			.then(({clusters} : {clusters : Cluster[]})=> clusters)
+			.then(r => {
+				console.log(r);
+				return r
+			})
+			.then(({clusters} : {clusters : Cluster<number, number[]>[]})=> clusters
+				.filter(({data}) => data.value > 0 )
+				)
 			.then(c => {
-				console.log(c)
 				if (!totalClusters.current){
-					const counts = c.map((cluster) : number => cluster.data!.count)
+					const counts = c.map((cluster) : number => cluster.data!.value)
 					totalClusters.current = counts.reduce((acc, c) => acc + c, 0)
 				}
 				return c
@@ -132,17 +137,16 @@ export default function NRBubbleMap({
 		}
 	},[])
 
-	const makeMarker = ({coord, data} : Cluster , i: number, ratio: Ratio) => (font &&  <Marker key={i} 
+	const makeMarker = ({coord, data} : Cluster<number, number[]> , i: number, ratio: Ratio) => (font &&  <Marker key={i} 
 							coord={mapCoords(coord)} 
 							font={font} 
 							data={data} 
-							size={calculateSize(calculateMarkerSize(data.count, totalClusters.current), new Ratio(width, height), ratio)} 
+							size={calculateSize(calculateMarkerSize(data.value, totalClusters.current), new Ratio(width, height), ratio)} 
 							{...DEFAULT_MARKER_STYLE} 
-							onClick={onMarkerClick && onMarkerClick(coord.x, coord.y, data.sellers)} 
-							dataToString={(data) => data.count.toString()}
+							onClick={onMarkerClick && onMarkerClick(coord.x, coord.y, data.members)} 
+							dataToString={(data) => data.value.toString()}
 							/>
 							)
-
 
 	return (
 		<BubbleMap width={width} height={height} 

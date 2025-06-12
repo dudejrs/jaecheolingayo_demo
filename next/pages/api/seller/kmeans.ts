@@ -1,5 +1,6 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {getCoords, getCoordsNear} from '@/lib/db/seller'
+import {kMeans} from '@/lib/clustering'
 
 type Coord = {
   x: number 
@@ -29,8 +30,37 @@ type RawParams = {
   tags: string
 }
 
-function distance(p1: Coord, p2: Coord) {
-  return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
+function distance(p1: Seller, p2: Seller) {
+  const {coord: c1} = p1 
+  const {coord: c2} = p2
+  return Math.sqrt((c1.x - c2.x) ** 2 + (c1.y - c2.y) ** 2);
+}
+
+function average(sellers: Seller[]) {
+  const averageX = sellers.reduce((sum, {coord}) => sum + coord.x, 0) / sellers.length
+  const averageY = sellers.reduce((sum, {coord}) => sum + coord.y, 0) / sellers.length
+
+  return {
+    id: -1,
+    coord : {
+      x: averageX  ,
+      y: averageY
+    }
+  } 
+}
+
+function createRandomGenerator(x: number, y: number, width: number, height: number) {
+  return function* () {
+    while (true) {
+      yield {
+        id : -1,
+        coord: {
+          x : x + Math.floor(Math.random() * width), 
+          y : y + Math.floor(Math.random() * height)
+        }
+      } as Seller
+    }
+  }
 }
 
 function parseNumberArray(tags?: string) {
@@ -56,78 +86,21 @@ function parseParams({x, y, width, height, k, tags} : Partial<RawParams>) : Para
   }
 }
 
-function assignClusters(sellers: Seller[], clusters: number[], centroids: Coord[]) {
-  for (let i = 0; i < sellers.length; i++) {
-    let minDistance = Infinity;
-    let cur = 0;
-
-    for (let j = 0; j < centroids.length; j++) {
-      const d = distance(sellers[i].coord, centroids[j]) 
-      if (d < minDistance) {
-        minDistance = d;
-        cur = j
-      }
-    }
-    clusters[i] = cur
-  }
-}
-
-function updateCentroids(sellers: Seller[], clusters: number[], centroids: Coord[]) {
-  for (let i = 0; i < centroids.length; i++) {
-    const clusteredCoords = clusters
-      .map((nearest_centroid, j) : [number, Seller] => [nearest_centroid, sellers[j]])
-      .filter(([nearest_centroid, _]) => nearest_centroid === i)
-      .map(([nearest_centroid, seller]) => seller.coord)
-
-    if (clusteredCoords.length === 0) {
-      continue
-    }
-
-    const averageX = clusteredCoords.reduce((sum, coord) => sum + coord.x, 0) / clusteredCoords.length;
-    const averageY = clusteredCoords.reduce((sum, coord) => sum + coord.y, 0) / clusteredCoords.length;
-
-    centroids[i] = {
-      x: averageX,
-      y: averageY
-    };
-  }
-}
-
-function kMeans(sellers: Seller[], k: number, iter: number, randomX: () => number, randomY : () => number ) {
-  const clusters = Array.from(({length: sellers.length}), () => Math.floor(Math.random() * k))
-  const centroids = Array.from({length: k}, () => {
-    return {
-    "x" : randomX(),
-    "y" : randomY()
-    }
-  })
-
-  for (let i = 0; i < iter; i++) {
-    assignClusters(sellers, clusters, centroids)
-    updateCentroids(sellers, clusters, centroids)
-  }
-
-  return centroids
-  .map((coord, i)=> {
-    return {
-    coord: coord,
-    data: {
-        count : clusters.reduce((count, nearest_centroid) => nearest_centroid === i ? count + 1 : count, 0),
-        sellers: clusters.reduce((acc, nearest_centroid, j) => nearest_centroid === i ? [...acc, sellers[j].id] : acc, [] as number[]),
-      }
-    }
-  })
-  .filter(({data})=> data.count > 0);
-}
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {x, y, width, height, k, tags} = parseParams(req.query)
   const iter = 20
   const sellers = await getCoordsNear(x + width/2, y + height/2 , Math.min(width, height) * 0.8, tags)
-  const clusters = kMeans(sellers, k, iter, 
-    () => x + Math.floor(Math.random() * width), 
-    () => y + Math.floor(Math.random() * height)
-  )
-    
+  const randomGenerator = createRandomGenerator(x, y, width, height)
+  const clusters = kMeans(sellers, k, iter, randomGenerator(), distance, average)
+    .map(({centroid, data }) => {
+      return {
+        coord : centroid.coord, 
+        data : {
+          value : data.value,
+          members: data.members.map(({id}) => id)
+        }
+      }
+    })
+  
   res.status(200).json({clusters});
 }
