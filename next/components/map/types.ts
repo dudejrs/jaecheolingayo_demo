@@ -183,7 +183,11 @@ export class Ratio {
 	}
 
 	get min() {
-		return this.width < this.height ? this.width : this.height
+		return Math.min(this.width, this.height)
+	}
+
+	get max() {
+		return Math.max(this.width, this.height)
 	}
 
 	get k() {

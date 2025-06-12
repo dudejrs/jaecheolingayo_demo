@@ -1,6 +1,6 @@
 'use client'
 
-import {useCallback, useRef} from "react"
+import {useCallback, useState, useEffect, useRef} from "react"
 import {BubbleMap} from "@/components/map"
 import type {Cluster} from "@/components/map/bubbleMap"
 import {Point, Ratio} from "@/components/map/types"
@@ -37,6 +37,7 @@ interface BubbleMapProps {
 	data : Data[]
 	calculateFunc:  (v: number[]) => number
 	generateRandomDatum: Generator<Data>
+	n?: number 
 	k?: number
 }
 
@@ -82,35 +83,47 @@ export default function TestBubbleMap({
 	width = 600,
 	height = 600,
 	className,
-	base : base_,
-	ratio : ratio_,
-	k = 5,
+	base : rawBase,
+	ratio : rawRatio,
+	k : kOrigin = 5,
+	n : n = 20,
 	data = [],
 	generateRandomDatum,
 	calculateFunc : calculateFunc_
 }: BubbleMapProps) {
-	const base = new Point(base_.x, base_.y)
-	const ratio = new Ratio(ratio_.width, ratio_.height)
+	const baseOrigin = new Point(rawBase.x, rawBase.y)
+	const ratioOrigin = new Ratio(rawRatio.width, rawRatio.height)
 	const totalClusters = useRef<number>(0)
 	const font = useFont();
+	const [updateKey, setUpdateKey] = useState(0);
+	const changeTotalCluster = useRef(true);
+
+	useEffect(() => {
+	  setUpdateKey(prev => prev + 1);
+	  changeTotalCluster.current = true;
+	}, [kOrigin, n, data,calculateFunc_]);
+
 
 	const calculateFunc = useCallback((data: Data[])=> {
 		return calculateFunc_(data.map(d => d.data))
 	}, [calculateFunc_])
 	
-	const updateFunc = useCallback(()=>{
-		const clusters = kMeans(data, k, 20, generateRandomDatum, distance, average, calculateFunc)
+	const updateFunc = useCallback((base: Point, ratio: Ratio)=>{
+		const k = Math.pow(Math.ceil(ratioOrigin.max / ratio.max), 2) * kOrigin
+		const clusters = kMeans(data, k, n, generateRandomDatum, distance, average, calculateFunc)
 		
-		if (!totalClusters.current) {
+		if (changeTotalCluster.current) {
 			totalClusters.current = clusters.reduce((acc, {data}) => acc + data.value, 0);
+			changeTotalCluster.current=false;
 		}
+
 		return Promise.resolve(clusters.map(({centroid, data}) => {
 			return {
 				coord : centroid.coord,
 				data 
 			}
 		}))
-	}, [data, calculateFunc_])
+	}, [data, calculateFunc_, kOrigin, data, n])
 
 	const mapCoords = useCallback(({x, y}: Coord)=>{
 		return {
@@ -124,16 +137,18 @@ export default function TestBubbleMap({
 			font={font}
 			coord={mapCoords(coord)}
 			data={data}
-			size={calculateSize(calculateMarkerSize(data.value, totalClusters.current), new Ratio(width, height), ratio)} 
+			size={calculateSize(calculateMarkerSize(data.value, totalClusters.current, 12, 40), new Ratio(width, height), ratio)} 
 			dataToString={data => data.value.toString()}
 			/>
 	)
 
 	return (
-		<BubbleMap width={width} height={height} 
-			base={base}
-			ratio={ratio}
-			ignoreUpdateFunc={() => false}
+		<BubbleMap 
+			key={updateKey}
+			width={width} height={height} 
+			base={baseOrigin}
+			ratio={ratioOrigin}
+			ignoreUpdateFunc={() => true}
 			updateFunc={updateFunc}
 			makeMarker={makeMarker}
 			/>);
