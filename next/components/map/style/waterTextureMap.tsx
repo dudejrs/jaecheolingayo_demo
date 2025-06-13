@@ -7,7 +7,7 @@ import {Path, PathInformation} from '../geojson/types';
 import {useGeoJson} from '../geojson';
 import {usePan, useZoom, useViewbox} from "../hook"
 import {calculateStrokeWidth, calculateSize} from '../util'
-
+import ImageMarker from "../marker/image"
 
 export interface ViewBoxProps {
 	base: Point
@@ -48,6 +48,18 @@ const DEFAULT_SIG_PATH_STYLES: StyleProps = {
 	fill:"none",
 	stroke:"var(--color-border)",
 	strokeOpacity: "0.5"
+}
+
+const PRODUCTING_AREAS = {
+	"수박" : {x : 1072622.362389701 , y : 1700665.045671898},
+	"딸기" : {x : 963900.371508182 , y : 1798977.591602869},
+	"레몬" : {x : 922038.341494118 , y : 1690435.015781667},
+	"사과" : {x : 1046862.957793095 , y : 2012171.382605061},
+	"포도" : {x : 1027220.087007551 , y : 1796973.453108771},
+	"키위" : {x : 959523.436423566 , y : 1628522.487663797},
+	"복숭아" : {x : 1170756.969394298 , y : 1839925.471387657},
+	"배" : {x : 1110021.658740707 , y : 1841887.94209036},
+	"오렌지" : {x : 912401.635394441 , y : 1474020.052497065},
 }
 
 function BasePoint({base, ratio, width, height} : {base: Point, ratio: Ratio, width: number, height: number}){
@@ -149,9 +161,29 @@ export default function StyledMap({
 				      <feDisplacementMap id="feDisp" in="SourceGraphic" scale={calculateSize(33, new Ratio(width, height), ratio)} />
 				    </filter>
 
+				    <filter
+				        id="shadow-filter"
+				        x="-50%"
+				        y="-50%"
+				        width="200%"
+				        height="200%"
+				        filterUnits="objectBoundingBox"
+				        colorInterpolationFilters="sRGB"
+				      >
+				        <feDropShadow
+				          dx='0'
+				          dy='0'
+				          stdDeviation={`${calculateSize(5, new Ratio(width, height), ratio)}`}
+				          floodColor='grey'
+				          floodOpacity='1'
+				          in="SourceGraphic"
+				        />
+				      </filter>
+
 					<pattern id="water" width={calculateSize(1000, new Ratio(width, height), ratio)} height={calculateSize(750, new Ratio(width, height), ratio)} patternUnits="userSpaceOnUse">
 						<image href="/water.jpg" width={calculateSize(1000, new Ratio(width, height), ratio)} height={calculateSize(750, new Ratio(width, height), ratio)} />
 					</pattern>
+
 				</defs>
 
 				<rect x={-DEFAULT_RATIO.width * 2} y={-DEFAULT_RATIO.height * 2} width={DEFAULT_RATIO.width * 4} height={DEFAULT_RATIO.height * 4} fill="url(#water)" filter="url(#water-filter)"/>
@@ -187,6 +219,60 @@ export default function StyledMap({
 							))
 					}
 				</g>	
+				<ImageMarker href="/marker/3d/수박.png" 
+					coord={{x : PRODUCTING_AREAS["수박"].x - DEFAULT_ORIGIN_POINT.x , 
+						y: DEFAULT_RATIO.height + DEFAULT_ORIGIN_POINT.y - PRODUCTING_AREAS["수박"].y}} 
+					width={calculateSize(50, new Ratio(width, height), ratio)} 
+					height={calculateSize(50, new Ratio(width, height), ratio)} />
+
+				<ImageMarker href="/marker/3d/딸기.png" 
+					coord={{x : PRODUCTING_AREAS["딸기"].x - DEFAULT_ORIGIN_POINT.x , 
+						y: DEFAULT_RATIO.height + DEFAULT_ORIGIN_POINT.y - PRODUCTING_AREAS["딸기"].y}} 
+					width={calculateSize(50, new Ratio(width, height), ratio)} 
+					height={calculateSize(50, new Ratio(width, height), ratio)} />
+
+				<ImageMarker href="/marker/3d/레몬.png" 
+					coord={{x : PRODUCTING_AREAS["레몬"].x - DEFAULT_ORIGIN_POINT.x , 
+						y: DEFAULT_RATIO.height + DEFAULT_ORIGIN_POINT.y - PRODUCTING_AREAS["레몬"].y}} 
+					width={calculateSize(50, new Ratio(width, height), ratio)} 
+					height={calculateSize(50, new Ratio(width, height), ratio)} />
+
+				<ImageMarker href="/marker/3d/청사과.png" 
+					coord={{x : PRODUCTING_AREAS["사과"].x - DEFAULT_ORIGIN_POINT.x , 
+						y: DEFAULT_RATIO.height + DEFAULT_ORIGIN_POINT.y - PRODUCTING_AREAS["사과"].y}} 
+					width={calculateSize(50, new Ratio(width, height), ratio)} 
+					height={calculateSize(50, new Ratio(width, height), ratio)} />
+
+				<ImageMarker href="/marker/3d/포도.png" 
+					coord={{x : PRODUCTING_AREAS["포도"].x - DEFAULT_ORIGIN_POINT.x , 
+						y: DEFAULT_RATIO.height + DEFAULT_ORIGIN_POINT.y - PRODUCTING_AREAS["포도"].y}} 
+					width={calculateSize(50, new Ratio(width, height), ratio)} 
+					height={calculateSize(50, new Ratio(width, height), ratio)} />
+
+				<ImageMarker href="/marker/3d/키위.png" 
+					coord={{x : PRODUCTING_AREAS["키위"].x - DEFAULT_ORIGIN_POINT.x , 
+						y: DEFAULT_RATIO.height + DEFAULT_ORIGIN_POINT.y - PRODUCTING_AREAS["키위"].y}} 
+					width={calculateSize(50, new Ratio(width, height), ratio)} 
+					height={calculateSize(50, new Ratio(width, height), ratio)} />
+
+				<ImageMarker href="/marker/3d/복숭아.png" 
+					coord={{x : PRODUCTING_AREAS["복숭아"].x - DEFAULT_ORIGIN_POINT.x , 
+						y: DEFAULT_RATIO.height + DEFAULT_ORIGIN_POINT.y - PRODUCTING_AREAS["복숭아"].y}} 
+					width={calculateSize(50, new Ratio(width, height), ratio)} 
+					height={calculateSize(50, new Ratio(width, height), ratio)} />
+
+				<ImageMarker href="/marker/3d/배.png" 
+					coord={{x : PRODUCTING_AREAS["배"].x - DEFAULT_ORIGIN_POINT.x , 
+						y: DEFAULT_RATIO.height + DEFAULT_ORIGIN_POINT.y - PRODUCTING_AREAS["배"].y}} 
+					width={calculateSize(50, new Ratio(width, height), ratio)} 
+					height={calculateSize(50, new Ratio(width, height), ratio)} />
+
+				<ImageMarker href="/marker/3d/오렌지.png" 
+					coord={{x : PRODUCTING_AREAS["오렌지"].x - DEFAULT_ORIGIN_POINT.x , 
+						y: DEFAULT_RATIO.height + DEFAULT_ORIGIN_POINT.y - PRODUCTING_AREAS["오렌지"].y}} 
+					width={calculateSize(50, new Ratio(width, height), ratio)} 
+					height={calculateSize(50, new Ratio(width, height), ratio)} />
+
 				{
 					children
 				}

@@ -22,3 +22,4 @@ export default function SimpleMarker<T>({
 		<circle cx={coord.x} cy={coord.y} r={size} className={className} {...kwargs} cursor={ onClick ? "pointer" : ""} onClick={onClick || undefined}/>		
 		)
 }
+	

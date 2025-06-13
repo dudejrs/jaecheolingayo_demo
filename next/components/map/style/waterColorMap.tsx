@@ -7,6 +7,7 @@ import {Path, PathInformation} from '../geojson/types';
 import {useGeoJson} from '../geojson';
 import {usePan, useZoom, useViewbox} from "../hook"
 import {calculateStrokeWidth, calculateSize} from '../util'
+import ImageMarker from "../marker/image"
 
 
 export interface ViewBoxProps {
@@ -183,6 +184,7 @@ export default function StyledMap({
 					</g>
 				</defs>	
   				<use href="#ctprvn_regions" filter={"url(#paintBlue)"} mask="url(#maskBlur)" />
+  		
 				{
 					children
 				}
