@@ -26,16 +26,6 @@ interface BubbleMapProps {
 	onMarkerClick: (x: number, y: number, members: number[]) => () => void
 }
 
-// type Data =  {
-// 		value: number 
-// 		members?: number[]	
-// }
-
-// type Cluster = {
-// 	coord: Coord
-// 	data: Data
-// }
-
 const DEFAULT_MARKER_STYLE : StyleProps = {
 	fill: "var(--gray-50)"
 }

@@ -22,7 +22,7 @@ K-Means 알고리즘의 흐름은 다음과 같습니다.
 ##### K-Means 버블맵의 주요 파라미터
 K-Means 버블맵의 주요 조절 가능한 파라미터는 다음과 같습니다.
 	1. 초기 중심점 : 초기 중심점을 지정하여, 결과의 랜덤성을 줄일 수 있습니다. 
-	2. K : 최대로 맵을 확장했을 떄 보이는 군집화의 갯수입니다. 맵을 확장하면 비례하여 증가합니다. 
+	2. K : 최대로 맵을 줌 아웃 했을 떄 보이는 군집화의 갯수입니다. 맵을 줌인하면 비례하여 증가합니다. 
 	3. N : 군집화 과정을 반복하는 회수. 값이 높을수록 결과의 랜덤성을 줄일 수 있습니다. 
 	4. 군집화 결과 : 군집화의 결과로 표시되는 값이며 최댓값 / 평균 / 최저값 / 갯수 를 표시합니다.
 
@@ -186,10 +186,6 @@ export default function MapPage() {
 	useEffect(() => {
 		setData(generateRandomData(M))
 	},[M])
-
-	useEffect(()=>{
-		console.log(calculateFunc.name)
-	},[calculateFunc])
 
 	return (
 		<TabGroup className="w-full flex flex-wrap justify-center gap-8" onChange={handleChange}>
