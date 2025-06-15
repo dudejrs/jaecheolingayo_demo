@@ -31,18 +31,18 @@
   --pccs-purple-strong: #7b1e6a;
 
   /* Bright Tone */
-  --pccs-red-bright: #f05e6c;
-  --pccs-red-orange-bright: #f6aa00;
-  --pccs-orange-bright: #f6aa00;
-  --pccs-yellow-orange-bright: #f6e600;
-  --pccs-yellow-bright: #f6e600;
-  --pccs-yellow-green-bright: #00b16a;
-  --pccs-green-bright: #00b16a;
-  --pccs-blue-green-bright: #00a0e9;
-  --pccs-cyan-bright: #0095d9;
-  --pccs-blue-bright: #007ac1;
-  --pccs-blue-purple-bright: #a757a8;
-  --pccs-purple-bright: #a757a8;
+  --pccs-red-bright: #f15d69;
+  --pccs-red-orange-bright: #fb8d3d;
+  --pccs-orange-bright: #fba5ef;
+  --pccs-yellow-orange-bright: #d918cd;
+  --pccs-yellow-bright: #f2d324;
+  --pccs-yellow-green-bright: #b7bf19;
+  --pccs-green-bright: #00b275;
+  --pccs-blue-green-bright: #008fb3;
+  --pccs-blue-bright: #1979ba;
+  --pccs-blue-purple-bright: #716bb6;
+  --pccs-purple-bright: #9c5da0;
+  --pccs-purple-red-bright: #cc5787;
 
   /* Light Tone */
   --pccs-red-light: #f4cccc;

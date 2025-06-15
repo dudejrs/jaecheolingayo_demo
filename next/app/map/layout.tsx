@@ -14,6 +14,7 @@ export default function MapPage({children}:
 			<div className="flex justify-center gap-6 pb-6"> 
 				<NavLink href="/map"> 기본 </NavLink>
 				<NavLink href="/map/bubble"> 버블맵 </NavLink>
+				<NavLink href="/map/outline"> 외곽선 </NavLink>
 			</div>
 			{children}
 		</div>

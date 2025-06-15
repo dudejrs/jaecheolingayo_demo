@@ -16,7 +16,8 @@ interface ViewboxProps {
 
 interface ScatterMapProps<T>{
 	data: T[]
-	makeMarker: (data: T, i: number, ratio: Ratio) => React.ReactNode
+	makeMarker: (data: T, i: number, ratio: Ratio) => React.ReactNode,
+	children? : React.ReactNode
 }
 
 export default function ScatterMap<T>({
@@ -26,6 +27,7 @@ export default function ScatterMap<T>({
 	ratio: originRatio = DEFAULT_RATIO,
 	base: originBase = DEFAULT_ORIGIN_POINT, 
 	makeMarker,
+	children,
 	...props
 }: MapProps & ViewboxProps & ScatterMapProps<T>){
 	const {ratio, setRatio, base, setBase} = useViewbox(originRatio, originBase, originBase.midPointOf(originRatio), width, height);
@@ -38,6 +40,9 @@ export default function ScatterMap<T>({
 						((d, i) => makeMarker(d, i, ratio)))
 				}
 		</g>
+		{
+			children
+		}
 	</Map>
 	)
 }

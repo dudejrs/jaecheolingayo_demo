@@ -1,6 +1,8 @@
 "use client"
 import {useState, useCallback, useEffect} from "react"
-import proj4 from 'proj4';
+import type {LatLng, UTMKPoint} from '@/lib/geoutils'
+import {utmkToLatLng,latLngToUTMK, generateRandomLatLng, generateRandomUTMK } from '@/lib/geoutils'
+
 import {Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
 import {Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/react'
 
@@ -10,7 +12,7 @@ import BubbleMap from "./bubbleMap"
 import ScatterMap from "./scatterMap"
 
 const content =`
-#### K-Means 버블맵 
+#### K-Means 버블맵 wz
 
 ##### K-Means 알고리즘 
 K-Means 알고리즘의 흐름은 다음과 같습니다. 
@@ -21,9 +23,9 @@ K-Means 알고리즘의 흐름은 다음과 같습니다.
 
 ##### K-Means 버블맵의 주요 파라미터
 K-Means 버블맵의 주요 조절 가능한 파라미터는 다음과 같습니다.
-	1. 초기 중심점 : 초기 중심점을 지정하여, 결과의 랜덤성을 줄일 수 있습니다. 
+	1. 초기 중심점 : 초기 중심점을 지정하여, 군집 결과의 랜덤성을을 줄일 수 있습니다. 
 	2. K : 최대로 맵을 줌 아웃 했을 떄 보이는 군집화의 갯수입니다. 맵을 줌인하면 비례하여 증가합니다. 
-	3. N : 군집화 과정을 반복하는 회수. 값이 높을수록 결과의 랜덤성을 줄일 수 있습니다. 
+	3. N : 군집화 과정을 반복하는 횟수. 값이 높을수록 군집 결과의 랜덤성을 줄일 수 있습니다. 
 	4. 군집화 결과 : 군집화의 결과로 표시되는 값이며 최댓값 / 평균 / 최저값 / 갯수 를 표시합니다.
 
 ##### K-Means 버블맵 예제 설명 
@@ -31,13 +33,9 @@ K-Means 버블맵의 주요 조절 가능한 파라미터는 다음과 같습니
 각 랜덤 지점 M개는 고유한 랜덤값을 0~1000 사이의 값을 가지며, 선택한 군집화 결과에 따라 군집화의 최댓값/평균/최저값/갯수를 확인할 수 있습니다.
 또한 지도의 파라미터 중 K, N, M을 변화 시켜 변화를 확인할 수 있습니다. 
 지도를 이동하면 생성된 데이터의 분포 및 SVG컴포넌트와 네이버 MAP API 컴포넌트에 K-Means 버블맵을 적용한 결과를 볼 수 있습니다. 
-(네이버 MAP API 컴포넌트는 빠른 시일내 작업해서 비교해볼 예정)
+
+네이버 MAP API 컴포넌트는 추후 작업해볼 예정입니다. 	
 `
-
-const WGS84 = 'EPSG:4326';
-const UTMK = 'EPSG:5179';
-
-proj4.defs(UTMK, '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs');
 
 const seoulBBox = {
   min : {
@@ -50,17 +48,7 @@ const seoulBBox = {
   }
 };
 
-interface LatLng {
-	lon: number
-	lat: number
-}
-
-interface UTMKPoint {
-	x: number 
-	y: number
-}
 type CoordType = "UTM-K" | "LatLng"
-
 type Coord = LatLng | UTMKPoint
 
 type Data<T> = {
@@ -74,36 +62,8 @@ function randomInRange(min: number, max: number): number {
 	return Math.random() * (max - min) + min;
 }
 
-function generateRandomLatLng(count: number): LatLng[] {
-	const arr: LatLng[] = [];
-
-	for (let i = 0; i < count; i++) {
-		arr.push({
-			lon: randomInRange(seoulBBox.min.lon, seoulBBox.max.lon),
-			lat: randomInRange(seoulBBox.min.lat, seoulBBox.max.lat)
-		});
-	}
-
-	return arr;
-}
-
-function generateRandomUTMK(count: number) : UTMKPoint[] {
-	const latlngPoints = generateRandomLatLng(count);
-	return latlngPoints.map(latLngToUTMK)
-}
-
-function utmkToLatLng({x, y}: UTMKPoint): LatLng {
-	const [lon, lat] = proj4(UTMK, WGS84, [x, y]);
-	return {lon, lat};
-}
-
-function latLngToUTMK({lon, lat}: LatLng): UTMKPoint {
-	const [x, y] = proj4(WGS84, UTMK, [lon, lat]);
-	return {x, y};
-}
-
 function generateRandomData(count: number) {
-	const coords = generateRandomUTMK(count);
+	const coords = generateRandomUTMK(seoulBBox.min, seoulBBox.max, count);
 
 	return coords.map(coord => { return{
 		coord : coord,
@@ -113,7 +73,7 @@ function generateRandomData(count: number) {
 
 function* generateRandomDatum() {
 	while (true) {
-		const [coord] = generateRandomUTMK(1);
+		const [coord] = generateRandomUTMK(seoulBBox.min, seoulBBox.max, 1);
 
 		yield {
 			coord : coord,
